@@ -19,7 +19,7 @@ system("title " 'PerubianBot')
 binary = FirefoxBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')
 
 postalcode = '08002'
-debug = 1  #1 = Enable     #0 = Disabled
+debug = 0  #1 = Enable     #0 = Disabled
 
 prefijos = ('6', '7')
 

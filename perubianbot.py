@@ -7,6 +7,8 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
 
 import requests
 
@@ -32,7 +34,7 @@ end = '22:00:00'
 global null
 null = ''
 
-version = '1.0'
+version = '1.1'
 
 print('PerubianBot V'+version+ '')
 print('')
@@ -104,24 +106,22 @@ while True: #Modo Repetición
     cofidis = 'https://www.cofidis.es/es/contactanos/telefono-cofidis.html'
     desguacesolivares = 'http://desguacesolivares.es/Llamame.aspx'
     mapfre = 'https://www.mapfre.es/boi/inicio.do?origen=autos_portalmapfre&destino=sgc_new&producto=autos'
-    orange = 'https://www.ofertaorange.com/'
+    orange = 'https://selectra.es/internet-telefono/companias/orange/telefono'
     selectra = 'https://ww.selectra.es/contact-internet'
     carglass = 'https://www.carglass.es/contacto'
     iberdrola = 'https://www.iberdrola.es/'
     digi = 'https://www.digimobil.es/contacto.php?act=pag-detail&idPage=483'
     movistar = 'https://promomovistar.es/sem-empresas/oferta-empresas-fusionpro-300.php?sem=ddb-emp-fusionpro'
     ptv = 'https://ptvtelecom.com/wp-content/themes/divi/interesa.php'
-    mfollanaortodoncia = 'https://www.mfollanaortodoncia.com/'
+    mfollanaortodoncia = 'https://www.mfollanaortodoncia.com/contactar/'
     autointegrale = 'https://autointegrale.com/llamada-gratuita/'
-    marinador = 'https://www.marinador.com/en/contact'
     isalud = 'https://www.isalud.com/llama-gratis'
-    clinicaboccio = 'https://www.clinicaboccio.com/'
+    clinicaboccio = 'https://www.clinicaboccio.com/pide-cita/'
     pontgrup = 'https://www.pontgrup.com/contacto/'
     tarifasonline = 'https://www.tarifasonline.com/companias-telefonicas/pepephone/'
-    albia = 'http://albia.es/#prettyPhoto[clickToCall]/0/'
     generali = 'https://www.generali.es/blog/tuasesorsalud/solicitar-informacion/'
     doctorpuchol = 'https://www.doctorpuchol.es/le-llamamos-gratis/'
-    vodafone = 'https://www.vodafone.es/c/empresas/pymes/es/conectividad/internet-fijo-y-television/vodafone-internet/'
+    vodafone = 'https://www.vodafone.es/c/empresas/pymes/es/conectividad/red-infinity/'
     masmovil = 'https://www.masmovil.es/contacto/'
     yoigo = 'https://www.yoigo.com/ayuda/como-contactar-con-atencion-al-cliente-de-yoigo'
     pelayo = 'https://www.pelayo.com/nosotros_te_llamamos/tellamamos'
@@ -137,6 +137,7 @@ while True: #Modo Repetición
     repuestoschimeneas = 'https://repuestoschimeneas.es/tellamamos'
     emagister = 'https://www.emagister.com/'
     homeserve = 'https://www.homeserve.es/servicios-reparaciones/fontaneros'
+    regal = 'https://te-llamamos.regal.es/user-details'
 
     profile.set_preference("media.volume_scale", "0.0")
     browser = webdriver.Firefox(firefox_binary=binary, executable_path = './geckodriver.exe', firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
@@ -167,19 +168,18 @@ while True: #Modo Repetición
         time.sleep(3)
         browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div[2]/div/div/div/div/div/div/article/div/div/div[2]/div[1]/div[2]/a').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[2]/div/div/div/div/section/div[2]/div[2]/div[2]/div/div/div/div[2]/form/div/div[1]/div/div/div[2]/div[2]/button').click()
         time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="EFF-FirstName"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="EFF-LastName"]').send_keys(surname)
-        browser.find_element_by_xpath('//*[@id="EFF-Company"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="EFF-Phone"]').send_keys(number)
-        browser.find_element_by_xpath('//*[@id="EFF-Email"]').send_keys(email)
-        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div[7]/div/div/div/div[2]/div/div[1]/div/div/form/div[2]/div[4]/div/button').click()
+        browser.find_element_by_xpath('//*[@id="facade-nombre"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="facade-apellidos"]').send_keys(surname)
+        browser.find_element_by_xpath('//*[@id="facade-empresa"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="facade-telefono"]').send_keys(number)
+        browser.find_element_by_xpath('//*[@id="facade-email"]').send_keys(email)
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div[7]/div/div/div/div[2]/div/div[1]/div/div/form/div[2]/div[4]/div/ul/li[2]/button').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div[7]/div/div/div/div[2]/div/div[1]/div/div/form/div[3]/div[1]/div/label[1]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div[7]/div/div/div/div[2]/div/div[1]/div/div/form/div[3]/div[1]/div/label[2]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div[7]/div/div/div/div[2]/div/div[1]/div/div/form/div[3]/div[2]/button').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/div/div/div/div/div[2]/div[1]/div/form[1]/div/div[9]/div[1]/label').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/div/div/div/div/div[2]/div[1]/div/form[1]/div/div[9]/div[2]/label').click()
+        time.sleep(1)
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/div/div/div/div/div[2]/div[1]/div/form[1]/div/div[10]/button').click()
         time.sleep(5)
         print('Vodafone: OK')
     except KeyboardInterrupt:
@@ -234,11 +234,12 @@ while True: #Modo Repetición
     try:
         browser.get(euroinnova)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/section/article/div[5]/div[2]/div/div[1]/div[2]/div/div/div/div[6]/a').click()
-        time.sleep(1)
+        #browser.find_element_by_xpath('/html/body/section/article/div[5]/div[2]/div/div[1]/div[2]/div/div/div/div[6]/a').click()
+        #time.sleep(1)
         browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
         browser.find_element_by_xpath('//*[@id="mail"]').send_keys(email)
         browser.find_element_by_xpath('//*[@id="tel"]').send_keys(number)
+        time.sleep(1)
         browser.find_element_by_xpath('//*[@id="privacidad"]').click()
         browser.find_element_by_xpath('//*[@id="btn_enviar"]').click()
         time.sleep(3)
@@ -288,7 +289,7 @@ while True: #Modo Repetición
     try:
         if current_time > start and current_time < end:
             browser.get(genesis)
-            time.sleep(3)
+            time.sleep(8)
             browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
             time.sleep(1)
             browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/section/div/div/div/div/div/div/div/div/div/div/div/div[2]/div/form/span/div[1]/div[1]/div[4]/select/option[2]').click()
@@ -303,7 +304,7 @@ while True: #Modo Repetición
         browser.close()
         quit()
     except:
-        print('Carglass: Skipeado (ERROR)')
+        print('Genesis: Skipeado (ERROR)')
 
     #JAZZTEL
     try:
@@ -331,6 +332,7 @@ while True: #Modo Repetición
         browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
         time.sleep(2)
         browser.find_element_by_xpath('/html/body/div[1]/div[2]/div/div/div/div/div/input').send_keys(number)
+        time.sleep(1)
         browser.find_element_by_xpath('/html/body/div[1]/div[2]/div/div/div/div/a').click()
         time.sleep(3)
         print('Euskaltel OK')
@@ -341,7 +343,7 @@ while True: #Modo Repetición
         print('Euskaltel Skipeado: ERROR')
 
     #cerrajeriasoler
-    try:
+    """try:
         browser.get(cerrajeriasoler)
         time.sleep(3)
         browser.find_element_by_xpath('/html/body/div[1]/div/div/div/div/div/div[3]/div/div/div/div/div/div[3]/div/div[2]/div/div/div/form/div[2]/span/input').send_keys(number)
@@ -352,7 +354,7 @@ while True: #Modo Repetición
         browser.close()
         quit()
     except:
-        print('cerrajeriasoler: Skipeado (ERROR)')
+        print('cerrajeriasoler: Skipeado (ERROR)')"""
 
 
     #instalium
@@ -376,10 +378,11 @@ while True: #Modo Repetición
     try:
         browser.get(itep)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/a[1]').click() # Cookies
+        browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/button[1]').click() # Cookies
         time.sleep(1)
         browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[1]/div[1]/p/span/input').send_keys(name)
         browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[2]/div[1]/p/span/input').send_keys(number)
+        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[2]/div[2]/p/span/div/select').click()
         browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[1]/span/div/select/option[3]').click()
         browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[6]/p/span/div/select/option[15]').click()
         browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[2]/span/div/select/option[1]').click()
@@ -398,11 +401,11 @@ while True: #Modo Repetición
     try:
         browser.get(prosegur)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/button"]').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/button').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/section[1]/div/div/div/div[2]/section[1]/div/div/div/div/div[1]/div[2]/form/div[2]/div[2]/div/input').send_keys(number)
-        browser.find_element_by_xpath('/html/body/section[1]/div/div/div/div[2]/section[1]/div/div/div/div/div[1]/div[2]/form/div[2]/div[3]/div/fieldset/label/span').click()
-        browser.find_element_by_xpath('/html/body/section[1]/div/div/div/div[2]/section[1]/div/div/div/div/div[1]/div[2]/form/div[2]/div[4]/div/div/div/button/span').click()
+        browser.find_element_by_xpath('/html/body/section[2]/div/div/div/div[2]/section/div/div/div/div/div[1]/div[2]/form/div[2]/div[2]/div/input').send_keys(number)
+        browser.find_element_by_xpath('/html/body/section[2]/div/div/div/div[2]/section/div/div/div/div/div[1]/div[2]/form/div[2]/div[3]/div/fieldset/label/span').click()
+        browser.find_element_by_xpath('/html/body/section[2]/div/div/div/div[2]/section/div/div/div/div/div[1]/div[2]/form/div[2]/div[4]/div/div/div/button/span').click()
         time.sleep(3)
         print('Prosegur: OK')
     except KeyboardInterrupt:
@@ -413,28 +416,13 @@ while True: #Modo Repetición
 
     #LineaDirecta
     try:
-        if current_time > start and current_time < end:
-            browser.get(lineadirecta)
-            time.sleep(3)
-            #browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/a[2]/div').click() #Cookies
-            #time.sleep(2)
-            browser.find_element_by_xpath('//*[@id="telefono"]').send_keys(number)
-            time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[2]/a').click()
-            time.sleep(3)
-            print('Linea Directa: OK')
-        else:
-            browser.get(lineadirecta)
-            time.sleep(3)
-            #browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div/a[2]/div').click() #Cookies
-            #time.sleep(2)
-            browser.find_element_by_xpath('//*[@id="telefono"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[1]/div[1]/select/option[2]').click()
-            browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[1]/div[2]/select/option[2]').click()
-            time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div[2]/section/section/form/div[2]/div/div[2]/a').click()
-            time.sleep(3)
-            print('Linea Directa: OK')
+        browser.get(lineadirecta)
+        time.sleep(3)
+        browser.find_element_by_xpath('//*[@id="telefono"]').send_keys(number)
+        time.sleep(2)
+        browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[2]/a').click()
+        time.sleep(3)
+        print('Linea Directa: OK')
     except KeyboardInterrupt:
         quit()
     except:
@@ -456,7 +444,7 @@ while True: #Modo Repetición
 
 
     #DesguacesOlivares
-    try:
+    """try:
         browser.get(desguacesolivares)
         time.sleep(2)
         browser.find_element_by_xpath('/html/body/form/div[4]/div/a[1]').click() #Cookies
@@ -469,11 +457,13 @@ while True: #Modo Repetición
     except KeyboardInterrupt:
         quit()
     except:
-        print('Desguaces Olivares: Skipeado (ERROR)')
+        print('Desguaces Olivares: Skipeado (ERROR)')"""
 
     #Mapfre
     try:
         browser.get(mapfre)
+        time.sleep(2)
+        browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
         time.sleep(2)
         browser.find_element_by_xpath('//*[@id="nombre"]').send_keys(name)
         browser.find_element_by_xpath('//*[@id="primer_apellido"]').send_keys(surname)
@@ -488,59 +478,17 @@ while True: #Modo Repetición
     except:
         print('Mapfre: Skipeado (ERROR)')
 
-    #Obesan
-    try:
-        browser.get(obesan)
-        time.sleep(2)
-        browser.find_element_by_xpath('//*[@id="cn-accept-cookie"]').click() #Cookies
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div[2]/div/div[1]/div[1]/div/div[1]/div/div[1]/div/div/form/p[1]/span/input').send_keys(name)
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div[2]/div/div[1]/div[1]/div/div[1]/div/div[1]/div/div/form/p[2]/span/input').send_keys(surname)
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div[2]/div/div[1]/div[1]/div/div[1]/div/div[1]/div/div/form/p[3]/span/input').send_keys(number)
-        time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div[2]/div/div[1]/div[1]/div/div[1]/div/div[1]/div/div/form/p[4]/span/span/span/input').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div[2]/div/div[1]/div[1]/div/div[1]/div/div[1]/div/div/form/p[5]/span/span/span/input').click()
-        time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div[2]/div/div[1]/div[1]/div/div[1]/div/div[1]/div/div/form/p[6]/input').click()
-        time.sleep(3)
-        print('Obesan: OK')
-    except KeyboardInterrupt:
-        browser.close()
-        quit()
-    except:
-        print('Obesan: Skipeado (ERROR)')
-
-    #audipro
-    try:
-        browser.get(audipro)
-        time.sleep(2)
-        browser.find_element_by_xpath('//*[@id="Nombre"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="Telefono"]').send_keys(number)
-        browser.find_element_by_xpath('//*[@id="e-mail"]').send_keys(email)
-        browser.find_element_by_xpath('//*[@id="Aceptolascondiciones"]').click()
-        browser.find_element_by_xpath('//*[@id="Enviar"]').click()
-        time.sleep(3)
-        print('audipro: OK')
-    except KeyboardInterrupt:
-        browser.close()
-        quit()
-    except:
-        print('audipro: Skipeado (ERROR)')
-
     #Orange
     try:
         browser.get(orange)
         time.sleep(2)
-        browser.find_element_by_xpath('/html/body/footer/div[3]/div/div/div[2]/div[2]/button').click() #Cookies
-        time.sleep(2)
-        browser.find_element_by_xpath('//*[@id="dflpr-input-phone-1"]').send_keys(number)
-        browser.find_element_by_xpath('/html/body/header/div/div/div[2]/div[2]/div/div[2]/div[2]/label/input').click()
-        browser.find_element_by_xpath('/html/body/header/div/div/div[2]/div[2]/div/div[2]/button').click()
-        time.sleep(2)
-        browser.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div[2]/div/div/div/div[1]/div[1]/input').send_keys(email)
-        browser.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div[2]/div/div/div/div[1]/div[2]/input').send_keys(name)
-        browser.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div[2]/div/div/div/div[1]/div[3]/input').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div[2]/div/div/div/div[2]/label/input').click()
-        browser.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div[2]/div/div/div/button').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/button[1]').click() #Cookies
+        time.sleep(1)
+        browser.find_element_by_xpath('/html/body/div[2]/div/div/div[1]/div/main/div[2]/div[1]/article/div/div[1]/p/a[2]').click()
+        time.sleep(1)
+        browser.find_element_by_xpath('//*[@id="callback-modal__phone"]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div/section/div[3]/form/div[3]/label/span[1]').click()
+        browser.find_element_by_xpath('//*[@id="callback-modal__submit"]').click()
         time.sleep(3)
         print('Orange: OK')
     except KeyboardInterrupt:
@@ -565,7 +513,7 @@ while True: #Modo Repetición
     #Iberdrola
     try:
         browser.get(iberdrola)
-        time.sleep(10)
+        time.sleep(4)
         browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
         time.sleep(2)
         browser.find_element_by_xpath('//*[@id="telf-lc-header"]').send_keys(number)
@@ -596,7 +544,7 @@ while True: #Modo Repetición
         print('Proyectos y Seguros: Skipeado (ERROR)')
 
     #Movistar
-    try:
+    """try:
         browser.get(movistar)
         time.sleep(2)
         movistartime = browser.find_element_by_xpath('//*[@id="horario"]')
@@ -617,21 +565,7 @@ while True: #Modo Repetición
     except KeyboardInterrupt:
         quit()
     except:
-        print('Movistar: Skipeado (ERROR)')
-
-    #PTV
-    try:
-        browser.get(ptv)
-        time.sleep(2)
-        browser.find_element_by_xpath('//*[@id="telefono"]').send_keys(number)
-        browser.find_element_by_xpath('//*[@id="terminos"]').click()
-        browser.find_element_by_xpath('/html/body/center/div[2]/div/form/div[1]/input').click()
-        time.sleep(3)
-        print('PTV: OK')
-    except KeyboardInterrupt:
-        quit()
-    except:
-        print('PTV: Skipeado (ERROR)')
+        print('Movistar: Skipeado (ERROR)')"""
 
     #aluminioscancuyas
     try:
@@ -654,6 +588,8 @@ while True: #Modo Repetición
     try:
         browser.get(urologiaclinicabilbao)
         time.sleep(2)
+        browser.find_element_by_xpath('/html/body/div[3]/div[2]/div/div/div[1]/button[1]/span').click()
+        time.sleep(1)
         browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[1]/div[1]/input').send_keys(number)
         browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[1]/div[2]/input').send_keys(surname)
         browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[1]/div[3]/input').send_keys(name)
@@ -685,7 +621,7 @@ while True: #Modo Repetición
     try:
         browser.get(emagister)
         time.sleep(2)
-        browser.find_element_by_xpath('/html/body/section[3]/div/div/button').click()
+        browser.find_element_by_xpath('/html/body/header/div[2]/div/div[3]/div/nav/div[1]/div/div/section[2]/button').click()
         time.sleep(1)
         browser.find_element_by_xpath('//*[@id="callMe-phone"]').send_keys(number)
         browser.find_element_by_xpath('/html/body/table[2]/tbody/tr[2]/td[2]/div/div[2]/form/p/label/span[2]').click()
@@ -702,12 +638,13 @@ while True: #Modo Repetición
     try:
         browser.get(mfollanaortodoncia)
         time.sleep(2)
-        browser.find_element_by_xpath('//*[@id="cookieClose"]').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div[5]/a[1]').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[3]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[1]/span/input').send_keys(name)
-        browser.find_element_by_xpath('/html/body/div[3]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[2]/span/input').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[3]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[4]/span/input').click()
-        browser.find_element_by_xpath('/html/body/div[3]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[3]/input').click()
+        browser.find_element_by_xpath('//*[@id="input_1_1"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="input_1_4"]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div/div/div[2]/form/div[1]/ul/li[3]/div/div/select/option[1]').click()
+        browser.find_element_by_xpath('//*[@id="input_1_5_1"]').click()
+        browser.find_element_by_xpath('//*[@id="gform_submit_button_1"]').click()
         print('mfollanaortodoncia: OK')
     except KeyboardInterrupt:
         quit()
@@ -720,33 +657,19 @@ while True: #Modo Repetición
         time.sleep(3)
         browser.find_element_by_xpath('/html/body/div[2]/div[2]/div/div[2]/div[2]/div/button').click()
         time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="formnombre"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="formtelefono"]').send_keys(number)
-        browser.find_element_by_xpath('//*[@id="formemail"]').send_keys(number)
-        browser.find_element_by_xpath('//*[@id="checkboxpolitica"]').click()
-        browser.find_element_by_xpath('//*[@id="checkboxcomms"]').click()
-        browser.find_element_by_xpath('/html/body/main/div[1]/div[2]/div[3]/form/div[3]/div/a/img').click()
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[2]/select').click()
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[3]/input[1]').send_keys(name)
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[3]/input[2]').send_keys(surname)
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[4]/input[1]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[4]/input[2]').send_keys(email)
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[5]/input').click()
+        browser.find_element_by_xpath('/html/body/main/section[1]/div[2]/div[2]/div[1]/div[1]/form/div[6]/button').click()
         time.sleep(1)
         print('homeserve: OK')
     except KeyboardInterrupt:
         quit()
     except:
         print('homeserve: Skipeado (ERROR)')
-
-    #marinador
-    try:
-        browser.get(marinador)
-        time.sleep(3)
-        browser.find_element_by_xpath('//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]').click()
-        time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="edit-submitted-telefonoc"]').send_keys(number)
-        browser.find_element_by_class_name('webform-submit.button-primary.awe-btn.awe-btn-13.form-submit').click()
-        time.sleep(1)
-        print('Marinador: OK')
-    except KeyboardInterrupt:
-        quit()
-    except:
-        print('Marinador: Skipeado (ERROR)')
 
     #isalud
     try:
@@ -767,11 +690,12 @@ while True: #Modo Repetición
     try:
         browser.get(clinicaboccio)
         time.sleep(3)
-        browser.find_element_by_xpath('//*[@id="cookieClose"]').click() #Cokies
-        browser.find_element_by_xpath('/html/body/div[2]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[1]/span/input').send_keys(name)
-        browser.find_element_by_xpath('/html/body/div[2]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[2]/span/input').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[2]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[4]/span/input').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[1]/div[2]/ul/li/div[1]/form/div[2]/p[3]/input').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/button[1]').click() #Cokies
+        browser.find_element_by_xpath('//*[@id="input_1_1"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="input_1_4"]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div/div/div[2]/form/div[1]/ul/li[3]/div/div/select/option[1]').click()
+        browser.find_element_by_xpath('//*[@id="input_1_5_1"]').click()
+        browser.find_element_by_xpath('//*[@id="gform_submit_button_1"]').click()
         time.sleep(2)
         print('Clinica Boccio: OK')
     except KeyboardInterrupt:
@@ -783,14 +707,13 @@ while True: #Modo Repetición
     try:
         browser.get(pontgrup)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/button[2]').click() #Cookies
-        browser.find_element_by_xpath('/html/body/div[2]/div[1]/div/div[1]/div/div[2]/div/button').click()
+        #browser.find_element_by_xpath('/html/body/div[3]/div[2]/button[2]').click() #Cookies
+        browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/section/div[2]/div[2]/div/div/div/div/a').click()
         time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="ctt_nombre"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="ctt_telefono"]').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[2]/footer/div[3]/div/div/form/div[1]/div[6]/div/select/option[2]').click()
-        browser.find_element_by_xpath('//*[@id="ctt_condiciones2"]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/footer/div[3]/div/div/form/div[2]/button/span').click()
+        browser.find_element_by_xpath('//*[@id="nombre-short"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="telefono-short"]').send_keys(number)
+        browser.find_element_by_xpath('//*[@id="terminos-short"]').click()
+        browser.find_element_by_xpath('//*[@id="btn-submit-short"]').click()
         time.sleep(2)
         print('PontGrup: OK')
     except KeyboardInterrupt:
@@ -804,6 +727,7 @@ while True: #Modo Repetición
         time.sleep(3)
         browser.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/div[1]/input').send_keys(number)
         browser.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/label/span').click()
+        time.sleep(1)
         browser.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/div[3]/button/span').click()
         time.sleep(2)
         print('ElPaso2000: OK')
@@ -817,11 +741,11 @@ while True: #Modo Repetición
         browser.get(centrodermatologicoestetico)
         time.sleep(3)
         browser.find_element_by_xpath('//*[@id="cookie_action_close_header"]').click() #Cookies
-        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/section/div[1]/div[1]/div[1]/div/div/div[4]/form/div[2]/div[1]/div/div/span/input').send_keys(name)
-        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/section/div[1]/div[1]/div[1]/div/div/div[4]/form/div[2]/div[3]/div/div/span/input').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/section/div[1]/div[1]/div[1]/div/div/div[4]/form/div[2]/span[1]/div/select/option[2]').click()
-        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/section/div[1]/div[1]/div[1]/div/div/div[4]/form/div[2]/span[2]/span/span/input').click()
-        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/section/div[1]/div[1]/div[1]/div/div/div[4]/form/div[2]/div[5]/div/div/input').click()
+        browser.find_element_by_xpath('//*[@id="form-field-nombre"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="form-field-telefono"]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/main/div/div[1]/section/div[2]/div[1]/div/div[4]/div/form/div/div[3]/div/select/option[3]').click()
+        browser.find_element_by_xpath('//*[@id="form-field-terminos"]').click()
+        browser.find_element_by_xpath('/html/body/main/div/div[1]/section/div[2]/div[1]/div/div[4]/div/form/div/div[5]/button/span/span[2]').click()
         time.sleep(2)
         print('centrodermatologicoestetico: OK')
     except KeyboardInterrupt:
@@ -833,19 +757,16 @@ while True: #Modo Repetición
     try:
         browser.get(generali)
         time.sleep(3)
-        browser.find_element_by_xpath('//*[@id="email-c1a9e7d9-fef2-4f6a-8251-2ed4fac8c3df"]').send_keys(email)
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[3]/div/select/option[2]').click()
-        browser.find_element_by_xpath('//*[@id="zip-c1a9e7d9-fef2-4f6a-8251-2ed4fac8c3df"]').send_keys(postalcode)
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[5]/div[1]/div/select/option[3]').click()
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[5]/div[2]/div/select/option[8]').click()
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[6]/div/select/option[4]').click
-        browser.find_element_by_xpath('//*[@id="phone-c1a9e7d9-fef2-4f6a-8251-2ed4fac8c3df"]').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[8]/div/select/option[57]').click()
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[9]/div/select/option[2]').click()
-        browser.find_element_by_xpath('//*[@id="politica_de_privacidad-c1a9e7d9-fef2-4f6a-8251-2ed4fac8c3df"]').click()
-        browser.find_element_by_xpath('//*[@id="autorizacion_ofertas_comerciales-c1a9e7d9-fef2-4f6a-8251-2ed4fac8c3df"]').click()
-        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[19]/div[2]/input').click()
-
+        browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+        time.sleep(2)
+        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[1]/div[2]/label').click()
+        browser.find_element_by_xpath('//*[contains(@id,"email")]').send_keys(email)
+        browser.find_element_by_xpath('//*[contains(@id,"firstname")]').send_keys(name)
+        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[3]/div[1]/div/select/option[2]').click()
+        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[3]/div[2]/div/select/option[2]').click()
+        browser.find_element_by_xpath('//*[contains(@id,"phone")]').send_keys(number)
+        browser.find_element_by_xpath('//*[contains(@id,"autorizacion_ofertas_comerciales")]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[16]/div[2]/input').click()
         time.sleep(5)
         print('Generali: OK')
     except KeyboardInterrupt:
@@ -853,24 +774,18 @@ while True: #Modo Repetición
     except:
         print('Generali: Skipeado (ERROR)')
 
-    #albia
+    #regal
     try:
-        browser.get(albia)
+        browser.get(regal)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/div[1]/span').click()
-        time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="clickToCall_deNombre"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="clickToCall_nuTelefono"]').send_keys(number)
-        browser.find_element_by_xpath('//*[@id="clickToCall_coEmail"]').send_keys(email)
-        browser.find_element_by_xpath('//*[@id="clickToCall_inPolitica"]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[3]/div/div/div/div[2]/div[2]/div/div/div/div/form/fieldset/div[4]/button/span').click()
-        time.sleep(3)
-        print('Albia: OK')
+        browser.find_element_by_xpath('//*[@id="primaryPhoneInput"]').send_keys(number)
+        browser.find_element_by_xpath('//*[@id="continueButton"]')
         time.sleep(5)
+        print('Regal: OK')
     except KeyboardInterrupt:
         quit()
     except:
-        print('Albia: Skipeado (ERROR)')
+        print('Regal: Skipeado (ERROR)')
 
     if repeat in ('y', 'yes', 's', 'si'):
         browser.close()

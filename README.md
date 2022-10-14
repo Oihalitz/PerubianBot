@@ -6,3 +6,10 @@ Bot "Te llamamos GRATIS"
 - <a href="https://github.com/mozilla/geckodriver/releases">GeckoDriver</a>
 - selenium
 - requests
+
+
+###Instalación de las dependencias:
+```
+pip install requests
+pip install selenium==4.2
+```

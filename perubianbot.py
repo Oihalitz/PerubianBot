@@ -56,6 +56,8 @@ if(debug == 0):
     name = input('Nombre de la persona: ')
     surname = input('Apellido: ')
     email = input('Correo: ')
+    if(email == null):
+        email = name+surname
     while True:
         repeat = input('Modo repetición [S/N]: ').lower()
         print('REPEAT: '+repeat)
@@ -84,6 +86,8 @@ if(debug == 1):
     print('REPEAT: '+repeat)
 
 print('')
+
+system("title " 'PerubianBot: '+number)
 
 while True: #Modo Repetición
     profile = webdriver.FirefoxProfile()
@@ -138,9 +142,10 @@ while True: #Modo Repetición
     emagister = 'https://www.emagister.com/'
     homeserve = 'https://www.homeserve.es/servicios-reparaciones/fontaneros'
     regal = 'https://te-llamamos.regal.es/user-details'
+    virgin = 'https://virgintelco.es/contacto'
 
     profile.set_preference("media.volume_scale", "0.0")
-    browser = webdriver.Firefox(firefox_binary=binary, executable_path = './geckodriver.exe', firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
+    browser = webdriver.Firefox(firefox_binary=binary, executable_path = './geckodriver', firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
 
 
     #SECURITAS DIRECT

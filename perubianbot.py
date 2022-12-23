@@ -24,7 +24,7 @@ else:
     binary = FirefoxBinary('/usr/bin/firefox')
 
 postalcode = '08002'
-debug = 1  #1 = Enable     #0 = Disabled
+debug = 0  #1 = Enable     #0 = Disabled
 
 prefijos = ('6', '7')
 
@@ -100,7 +100,7 @@ while True: #Modo Repetición
 
     securitas = 'https://www.securitasdirect.es/'
     securitaserror = 'https://www.securitasdirect.es/error-envio'
-    jazztel = 'http://llamamegratis.es/jazztel/v2/webphone.html?lang=es-ES&isLandingLander=1&widget=1197&wphUrl#https://www.contratarjazztel.es/'
+    jazztel = 'https://www.telefonojazztel.es/'
     genesis = 'https://www.genesis.es/c2c'
     euskaltel = 'https://www.euskaltel.com/CanalOnline/particulares/general/tarifa-family-mas-lineas-adicionales?idioma=esp'
     itep = 'https://www.itep.es/llamada-gratuita'
@@ -185,8 +185,8 @@ while True: #Modo Repetición
         browser.find_element_by_xpath('//*[@id="facade-phoneNumber"]').send_keys(number)
         browser.find_element_by_xpath('//*[@id="facade-email"]').send_keys(email)
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[9]/div[1]/label').click()
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[9]/div[2]/label').click()
+        browser.find_element_by_xpath('//*[@id="facade-legal"]').click()
+        browser.find_element_by_xpath('//*[@id="facade-newsletter"]').click()
         time.sleep(1)
         browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[10]/button/span[1]').click()
         time.sleep(5)
@@ -319,7 +319,14 @@ while True: #Modo Repetición
     try:
         browser.get(jazztel)
         time.sleep(3)
+        browser.find_element_by_xpath('/html/body/div[7]/div/div[2]/div/div[2]/a[2]').click()
+        time.sleep(1)
+        browser.find_element_by_xpath('/html/body/header/div[1]/div/div/div[2]/a').click()
+        time.sleep(5)
         browser.find_element_by_xpath('//*[@id="phoneNumber"]').send_keys(number)
+        if(browser.find_element_by_xpath('//*[@id="multioption"]').is_displayed()):
+            browser.find_element_by_xpath('/html/body/div[1]/div[1]/div[2]/div[3]/div/div[2]/form/div/div[3]/div/select/option[2]').click()
+        time.sleep(2)
         browser.find_element_by_xpath('//*[@id="env"]').click()
         time.sleep(3)
         jazztelerror = browser.find_element_by_xpath('//*[@id="statusErrorTitle"]')

@@ -18,10 +18,13 @@ from os import system
 system("title " 'PerubianBot')
 
 #Ubicación Firefox
-binary = FirefoxBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')
+if os.name == 'nt':
+    binary = FirefoxBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')
+else:
+    binary = FirefoxBinary('/usr/bin/firefox')
 
 postalcode = '08002'
-debug = 0  #1 = Enable     #0 = Disabled
+debug = 1  #1 = Enable     #0 = Disabled
 
 prefijos = ('6', '7')
 
@@ -34,7 +37,7 @@ end = '22:00:00'
 global null
 null = ''
 
-version = '1.1'
+version = '1.2'
 
 print('PerubianBot V'+version+ '')
 print('')
@@ -173,18 +176,19 @@ while True: #Modo Repetición
         time.sleep(3)
         browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[2]/div/div/div/div/span/div/div/section/div[2]/div[2]/div[2]/div/div/div/div[2]/form/div/div[1]/div/div/div[2]/div[2]/button').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[2]/div/div/div/span/div/div/section/div[2]/div[2]/div[2]/div/div/div/div[2]/form/div/div[1]/div/div/div[2]/div[2]/button').click()
         time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="facade-nombre"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="facade-apellidos"]').send_keys(surname)
-        browser.find_element_by_xpath('//*[@id="facade-empresa"]').send_keys(name)
-        browser.find_element_by_xpath('//*[@id="facade-telefono"]').send_keys(number)
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[1]/div[2]/label').click()
+        browser.find_element_by_xpath('//*[@id="facade-firstName"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="facade-lastName"]').send_keys(surname)
+        browser.find_element_by_xpath('//*[@id="facade-entreprise"]').send_keys(name)
+        browser.find_element_by_xpath('//*[@id="facade-phoneNumber"]').send_keys(number)
         browser.find_element_by_xpath('//*[@id="facade-email"]').send_keys(email)
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[2]/div[1]/div/form[1]/div/div[9]/div[1]/label').click()
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[2]/div[1]/div/form[1]/div/div[9]/div[2]/label').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[9]/div[1]/label').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[9]/div[2]/label').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[2]/div[1]/div/form[1]/div/div[10]/button').click()
+        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[10]/button/span[1]').click()
         time.sleep(5)
         print('Vodafone: OK')
     except KeyboardInterrupt:

@@ -23,7 +23,7 @@ if os.name == 'nt':
 else:
     binary = FirefoxBinary('/usr/bin/firefox')
 
-postalcode = '08002'
+postalcode = '28005'
 debug = 0  #1 = Enable     #0 = Disabled
 
 prefijos = ('6', '7')
@@ -37,7 +37,7 @@ end = '22:00:00'
 global null
 null = ''
 
-version = '1.2'
+version = '1.3'
 
 print('PerubianBot V'+version+ '')
 print('')
@@ -60,7 +60,7 @@ if(debug == 0):
     surname = input('Apellido: ')
     email = input('Correo: ')
     if(email == null):
-        email = name+surname
+        email = name+surname+"@gmail.com"
     while True:
         repeat = input('Modo repetición [S/N]: ').lower()
         print('REPEAT: '+repeat)
@@ -103,7 +103,7 @@ while True: #Modo Repetición
     jazztel = 'https://www.telefonojazztel.es/'
     genesis = 'https://www.genesis.es/c2c'
     euskaltel = 'https://www.euskaltel.com/CanalOnline/particulares/general/tarifa-family-mas-lineas-adicionales?idioma=esp'
-    itep = 'https://www.itep.es/llamada-gratuita'
+    itep = 'https://www.itep.es/'
     proyectosyseguros = 'https://www.proyectosyseguros.com/te-llamamos/'
     tutfgamedida = 'https://tutfgamedida.com/llamame/'
     prosegur = 'https://www.prosegur.es/esp/alarmahogar/sem'
@@ -132,7 +132,7 @@ while True: #Modo Repetición
     masmovil = 'https://www.masmovil.es/contacto/'
     yoigo = 'https://www.yoigo.com/ayuda/como-contactar-con-atencion-al-cliente-de-yoigo'
     pelayo = 'https://www.pelayo.com/nosotros_te_llamamos/tellamamos'
-    euroinnova = 'https://www.euroinnova.edu.es/formulario-llamamos-gratis#formulario'
+    euroinnova = 'https://www.euroinnova.edu.es/cursos#formulario'
     instalium = 'https://www.instalium.es/et-truquem-gratis/'
     obesan = 'https://obesan.com/te-llamamos-nosotros/'
     elpaso2000 = 'https://www.elpaso2000.com/te-llamamos/'
@@ -149,7 +149,6 @@ while True: #Modo Repetición
 
     profile.set_preference("media.volume_scale", "0.0")
     browser = webdriver.Firefox(firefox_binary=binary, executable_path = './geckodriver', firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
-
 
     #SECURITAS DIRECT
     try:
@@ -176,20 +175,22 @@ while True: #Modo Repetición
         time.sleep(3)
         browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[2]/div/div/div/span/div/div/section/div[2]/div[2]/div[2]/div/div/div/div[2]/form/div/div[1]/div/div/div[2]/div[2]/button').click()
+        browser.find_element_by_xpath('/html/body/div[2]/main/div[2]/div/div/div/div/span/div/div/section/div[2]/div[2]/div[2]/div/div/div/div[2]/form/div/div[1]/div/div/div[2]/div[2]/button').click()
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[1]/div[2]/label').click()
+        browser.find_element_by_xpath('/html/body/div[2]/main/div[6]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[1]/div[2]/label').click()
         browser.find_element_by_xpath('//*[@id="facade-firstName"]').send_keys(name)
         browser.find_element_by_xpath('//*[@id="facade-lastName"]').send_keys(surname)
         browser.find_element_by_xpath('//*[@id="facade-entreprise"]').send_keys(name)
         browser.find_element_by_xpath('//*[@id="facade-phoneNumber"]').send_keys(number)
         browser.find_element_by_xpath('//*[@id="facade-email"]').send_keys(email)
         time.sleep(1)
-        browser.find_element_by_xpath('//*[@id="facade-legal"]').click()
-        browser.find_element_by_xpath('//*[@id="facade-newsletter"]').click()
+        checkbox = browser.find_element_by_xpath("//input[@id='facade-legal']")
+        browser.execute_script("arguments[0].click();", checkbox)
+        checkbox = browser.find_element_by_xpath('//input[@id="facade-newsletter"]')
+        browser.execute_script("arguments[0].click();", checkbox)
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[1]/div/main/div[5]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[10]/button/span[1]').click()
-        time.sleep(5)
+        browser.find_element_by_xpath('/html/body/div[2]/main/div[6]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[10]/button/span[1]').click()
+        time.sleep(8)
         print('Vodafone: OK')
     except KeyboardInterrupt:
         browser.close()
@@ -245,11 +246,16 @@ while True: #Modo Repetición
         time.sleep(3)
         #browser.find_element_by_xpath('/html/body/section/article/div[5]/div[2]/div/div[1]/div[2]/div/div/div/div[6]/a').click()
         #time.sleep(1)
+        browser.find_element_by_xpath('//*[@id="accept-cookies"]').click() #Cookies
+        time.sleep(2)
+        browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/div[2]/button').click()
+        time.sleep(2)
         browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
         browser.find_element_by_xpath('//*[@id="mail"]').send_keys(email)
         browser.find_element_by_xpath('//*[@id="tel"]').send_keys(number)
         time.sleep(1)
         browser.find_element_by_xpath('//*[@id="privacidad"]').click()
+        time.sleep(1)
         browser.find_element_by_xpath('//*[@id="btn_enviar"]').click()
         time.sleep(3)
         print('Euroinnova: OK')
@@ -299,12 +305,17 @@ while True: #Modo Repetición
         if current_time > start and current_time < end:
             browser.get(genesis)
             time.sleep(8)
-            browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+            except:
+                pass
             time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/section/div/div/div/div/div/div/div/div/div/div/div/div[2]/div/form/span/div[1]/div[1]/div[4]/select/option[2]').click()
+            browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/section/div/div/div/div/div/div[2]/div/div/div/div/div/div[2]/div/form/span/div[1]/div[1]/div[4]/select/option[3]').click()
             browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
             browser.find_element_by_xpath('//*[@id="phone"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/section/div/div/div/div/div/div/div/div/div/div/div/div[2]/div/form/span/div[1]/div[2]/div/button').click()
+            browser.find_element_by_xpath('//*[@id="phoneConfirm"]').send_keys(number)
+
+            browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/section/div/div/div/div/div/div[2]/div/div/div/div/div/div[2]/div/form/span/div[1]/div[2]/div/button').click()
             time.sleep(1)
             print('Genesis: OK')
         else:
@@ -319,7 +330,10 @@ while True: #Modo Repetición
     try:
         browser.get(jazztel)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/div[7]/div/div[2]/div/div[2]/a[2]').click()
+        try:
+            browser.find_element_by_xpath('/html/body/div[7]/div/div[2]/div/div[2]/a[2]').click() #Cookies
+        except:
+            pass
         time.sleep(1)
         browser.find_element_by_xpath('/html/body/header/div[1]/div/div/div[2]/a').click()
         time.sleep(5)
@@ -394,17 +408,23 @@ while True: #Modo Repetición
     try:
         browser.get(itep)
         time.sleep(3)
-        browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/button[1]').click() # Cookies
+        try:
+            browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/button[1]').click() # Cookies
+            time.sleep(1)
+        except:
+            pass
+        browser.find_element_by_xpath('/html/body/header/div/div[5]/div/p/button').click() # Solicitar Informacion
         time.sleep(1)
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[1]/div[1]/p/span/input').send_keys(name)
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[2]/div[1]/p/span/input').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[2]/div[2]/p/span/div/select').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[1]/span/div/select/option[3]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/div[6]/p/span/div/select/option[15]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[2]/span/div/select/option[1]').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[3]/span[1]/span/span/label/input').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[3]/span[2]/span/span/label/input').click()
-        browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div[2]/div/div[2]/form/div[2]/p[4]/input').click()
+        browser.find_element_by_xpath('//*[@id="edit-email"]').send_keys(email)
+        browser.find_element_by_xpath('//*[@id="edit-phone"]').send_keys(number)
+        browser.find_element_by_xpath('//*[@id="edit-cp"]').send_keys(postalcode)
+        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/div/form/div[4]/select/optgroup[1]/option[1]').click()
+        browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/div/form/div[5]/select/option[2]').click()
+        browser.find_element_by_xpath('//*[@id="edit-conditions"]').click()
+        browser.find_element_by_xpath('//*[@id="edit-educa-consent"]').click()
+        time.sleep(1)
+        browser.find_element_by_xpath('//*[@id="edit-submit-lead-form-header-web-solicita-info-general-1"]').click()
+
         time.sleep(3)
         print('ITEP: OK')
     except KeyboardInterrupt:
@@ -434,9 +454,16 @@ while True: #Modo Repetición
     try:
         browser.get(lineadirecta)
         time.sleep(3)
+        try:
+            browser.find_element_by_xpath('//button[@id="didomi-notice-agree-button"]').click()
+        except:
+            pass
         browser.find_element_by_xpath('//*[@id="telefono"]').send_keys(number)
         time.sleep(2)
-        browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[2]/a').click()
+        try:
+            browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[2]/a').click() # Buttom 1
+        except:
+            browser.find_element_by_xpath('/html/body/div[3]/section/section/form/div[2]/div/div[2]/a').click() # Buttom 2
         time.sleep(3)
         print('Linea Directa: OK')
     except KeyboardInterrupt:
@@ -533,8 +560,8 @@ while True: #Modo Repetición
         browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
         time.sleep(2)
         browser.find_element_by_xpath('//*[@id="telf-lc-header"]').send_keys(number)
-        browser.find_element_by_xpath('/html/body/div[1]/main/div[2]/div[1]/div/div/div[3]/div/div[2]/form/div[2]/label').click()
-        browser.find_element_by_xpath('/html/body/div[1]/main/div[2]/div[1]/div/div/div[3]/div/div[2]/button/span').click()
+        browser.find_element_by_xpath('/html/body/div[1]/main/div[2]/section[1]/div[2]/div/div/div[2]/form/div[2]/label').click()
+        browser.find_element_by_xpath('/html/body/div[1]/main/div[2]/section[1]/div[2]/div/div/div[2]/div/button/span').click()
         time.sleep(3)
         print('Iberdrola: OK')
     except KeyboardInterrupt:
@@ -794,7 +821,8 @@ while True: #Modo Repetición
     try:
         browser.get(regal)
         time.sleep(3)
-        browser.find_element_by_xpath('//*[@id="primaryPhoneInput"]').send_keys(number)
+        browser.find_element_by_xpath('//input[@id="primaryPhoneInput"][1]').send_keys(number)
+        browser.find_element_by_xpath('//input[@id="primaryPhoneInput"][2]').send_keys(number)
         browser.find_element_by_xpath('//*[@id="continueButton"]')
         time.sleep(5)
         print('Regal: OK')

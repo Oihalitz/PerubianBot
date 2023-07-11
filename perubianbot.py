@@ -26,7 +26,7 @@ else:
 postalcode = '28005'
 debug = 0  #1 = Enable     #0 = Disabled
 
-prefijos = ('6', '7')
+prefijos = ('6', '7', '9')
 
 #Limite hora
 now = datetime.now()

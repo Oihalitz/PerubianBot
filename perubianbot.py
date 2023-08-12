@@ -24,7 +24,7 @@ def main():
     start = '10:40:00'
     end = '22:00:00'
 
-    debug = 1
+    debug = 0
     if debug == 1:
         print('DEBUG MODE ON')
         number, name, surname, email = '666666666', 'NombrePrueba', 'ApellidoPrueba', 'CorreoPrueba@gmail.com'

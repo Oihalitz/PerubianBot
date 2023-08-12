@@ -3,6 +3,7 @@
 Bot "Te llamamos GRATIS"
 
 ### Dependencias:
+- Firefox
 - <a href="https://github.com/mozilla/geckodriver/releases">GeckoDriver</a>
 - selenium
 - requests

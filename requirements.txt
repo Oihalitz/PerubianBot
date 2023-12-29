@@ -1,2 +1,4 @@
-requests
-selenium==4.2
+colorama==0.4.6
+console_menu==0.8.0
+Requests
+selenium==4.16.0

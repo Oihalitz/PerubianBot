@@ -117,13 +117,11 @@ def formulario():
 
 interrupted = False
 
-def signal_handler(signum, frame):
+def handle_interrupt(browser):
     global interrupted
     interrupted = True
-
-def close_browser_and_quit(browser):
     browser.quit()
-    sys.exit(0)
+    print("Navegador cerrado. Volviendo al menú principal...")
 
 def main():
     #Limite hora
@@ -135,7 +133,8 @@ def main():
     repeat = input('Modo repetición [S/N]: ').lower()
     if repeat in ('y', 'yes', 's', 'si'):
         repeat = 1
-
+        
+    global interrupted
     while not interrupted:
         firefoxsetup()
         global browser
@@ -146,6 +145,8 @@ def main():
         browser = webdriver.Firefox(firefox_binary=binary, executable_path = geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
         
         #SECURITAS DIRECT
+        if interrupted:
+            print("galleta")
         try:
             browser.get('https://www.securitasdirect.es/')
             time.sleep(5)
@@ -158,12 +159,12 @@ def main():
                 print('Securitas Direct: Skipeado (Limite Excedido)')
             else:
                 print('Securitas Direct: OK')
-        except KeyboardInterrupt:
-            close_browser_and_quit(browser)
-        except:
+        except Exception as e:
             print('Securitas Direct: Skipeado (ERROR)')
 
         #Vodafone
+        if interrupted:
+            break    
         try:
             browser.get('https://www.vodafone.es/c/empresas/pymes/es/conectividad/red-infinity/')
             time.sleep(3)
@@ -186,12 +187,12 @@ def main():
             browser.find_element_by_xpath('/html/body/div[2]/main/div[6]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[10]/button/span[1]').click()
             time.sleep(8)
             print('Vodafone: OK')
-        except KeyboardInterrupt:
-            close_browser_and_quit(browser)
         except:
             print('Vodafone: Skipeado (ERROR)')
 
         #euroinnova
+        if interrupted:
+            break
         try:
             browser.get('https://www.euroinnova.edu.es/cursos#formulario')
             time.sleep(3)
@@ -208,8 +209,6 @@ def main():
             browser.find_element_by_xpath('//*[@id="btn_enviar"]').click()
             time.sleep(3)
             print('Euroinnova: OK')
-        except KeyboardInterrupt:
-            close_browser_and_quit(browser)
         except:
             print('Euroinnova: Skipeado (ERROR)')
 
@@ -234,7 +233,8 @@ def main():
             else:
                 print('Genesis: Skipeado (Fuera de Horario)')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Genesis: Skipeado (ERROR)')
 
@@ -268,7 +268,8 @@ def main():
             requests.post(url, headers=headers, json=payload)
             print('Racctel+: Ok')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Racctel+: Skipeado (ERROR)')
 
@@ -282,7 +283,8 @@ def main():
             time.sleep(3)
             print('Jazztel: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Jazztel: Skipeado (ERROR)')
 
@@ -314,7 +316,8 @@ def main():
             else:   
                 print('Euskaltel Skipeado: ERROR')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Euskaltel Skipeado: ERROR')
 
@@ -341,7 +344,8 @@ def main():
             time.sleep(3)
             print('ITEP: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('ITEP Skipeado: ERROR')
 
@@ -357,7 +361,8 @@ def main():
             time.sleep(3)
             print('Prosegur: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Prosegur: Skipeado (ERROR)')
 
@@ -378,7 +383,8 @@ def main():
             time.sleep(3)
             print('Linea Directa: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Linea Directa: Skipeado (ERROR)')
 
@@ -392,7 +398,8 @@ def main():
             time.sleep(3)
             print('Telecable: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Telecable: Skipeado (ERROR)')
 
@@ -411,7 +418,8 @@ def main():
             time.sleep(3)
             print('Mapfre: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Mapfre: Skipeado (ERROR)')
 
@@ -429,7 +437,8 @@ def main():
             time.sleep(3)
             print('Orange: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Orange: Skipeado (ERROR)')
 
@@ -443,7 +452,8 @@ def main():
             time.sleep(3)
             print('Selectra: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Selectra: Skipeado (ERROR)')
 
@@ -459,7 +469,8 @@ def main():
             time.sleep(3)
             print('Iberdrola: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Iberdrola: Skipeado (ERROR)')
 
@@ -476,7 +487,8 @@ def main():
             time.sleep(3)
             print('Proyectos y Seguros: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Proyectos y Seguros: Skipeado (ERROR)')
 
@@ -528,7 +540,8 @@ def main():
             browser.find_element_by_xpath('//*[@id="gform_submit_button_1"]').click()
             print('mfollanaortodoncia: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('mfollanaortodoncia: Skipeado (ERROR)')
 
@@ -551,7 +564,8 @@ def main():
             time.sleep(1)
             print('homeserve: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('homeserve: Skipeado (ERROR)')
 
@@ -566,7 +580,8 @@ def main():
             browser.find_element_by_xpath('//*[@id="contact_freecall"]').click()
             print('iSalud: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('iSalud: Skipeado (ERROR)')
 
@@ -585,7 +600,8 @@ def main():
             time.sleep(2)
             print('Clinica Boccio: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Clinica Boccio: Skipeado (ERROR)')
 
@@ -606,7 +622,8 @@ def main():
             time.sleep(2)
             print('PontGrup: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('PontGrup: Skipeado (ERROR)')
 
@@ -625,7 +642,8 @@ def main():
             time.sleep(2)
             print('ElPaso2000: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('ElPaso2000: Skipeado (ERROR)')
 
@@ -645,7 +663,8 @@ def main():
             time.sleep(2)
             print('centrodermatologicoestetico: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('centrodermatologicoestetico: Skipeado (ERROR)')
 
@@ -666,7 +685,8 @@ def main():
             time.sleep(5)
             print('Generali: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Generali: Skipeado (ERROR)')
 
@@ -680,7 +700,8 @@ def main():
             time.sleep(5)
             print('Regal: OK')
         except KeyboardInterrupt:
-            close_browser_and_quit(browser)
+            browser.close()
+            quit()
         except:
             print('Regal: Skipeado (ERROR)')
 
@@ -690,16 +711,12 @@ def main():
         else:
             browser.quit()
             break
-        if repeat != 1:
-            browser.close()
-            print('Repeat ON')
 
 #Menu
 def modo_automatico():
     print('Activando Modo automatico...')
     time.sleep(1)
     formulario()
-    firefoxsetup()
     main()
 
 def modo_porculero():
@@ -727,5 +744,5 @@ menu.append_item(submenu_item)
 
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, lambda sig, frame: handle_interrupt(browser))
     menu.show()

@@ -1,3 +1,7 @@
 geckodriver.exe
 geckodriver
 geckodriver.log
+perubianbot.spec
+/build/
+/dist/
+icon.ico

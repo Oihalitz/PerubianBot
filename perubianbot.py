@@ -19,7 +19,6 @@ version = 'Beta 2.0'
 global debug
 debug = 0
 
-
 system("title " 'PerubianBot '+version)
 
 global perubian
@@ -36,14 +35,16 @@ menu = ConsoleMenu(Fore.YELLOW + perubian, "Seleccione un modo"+ Style.RESET_ALL
 
 #Firefox Configuration
 def firefoxsetup():
-    global binary
-    binary = 'C:\\Program Files\\Mozilla Firefox\\firefox.exe' if os.name == 'nt' else '/usr/bin/firefox'
-    global profile
-    profile = webdriver.FirefoxProfile()
-    profile.set_preference("media.autoplay.default", 0)
-    profile.accept_untrusted_certs = True
-    global PATH_TO_DEV_NULL
-    PATH_TO_DEV_NULL = 'nul'
+    global binary, profile, PATH_TO_DEV_NULL
+    if os.name == 'nt':  # Windows
+        binary = 'C:\\Program Files\\Mozilla Firefox\\firefox.exe'
+        PATH_TO_DEV_NULL = 'nul'
+    elif os.uname().sysname == 'Darwin':  # macOS
+        binary = '/Applications/Firefox.app/Contents/MacOS/firefox'
+        PATH_TO_DEV_NULL = '/dev/null'
+    else:
+        binary = '/usr/bin/firefox'
+        PATH_TO_DEV_NULL = '/dev/null'
     profile = webdriver.FirefoxProfile()
     profile.set_preference("media.autoplay.default", 0)
     profile.accept_untrusted_certs = True
@@ -54,7 +55,7 @@ def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 #Formulario Datos
-def pregunta_estilizada(prompt, datos_previos='', email=''):
+def pregunta_estilizada(prompt, datos_previos='', email='', validacion=None):
     clear_console()
     print(perubian)
     # Imprimir los datos previos antes de hacer la nueva pregunta
@@ -62,11 +63,17 @@ def pregunta_estilizada(prompt, datos_previos='', email=''):
         print(datos_previos)
     print(Fore.YELLOW + Style.BRIGHT + prompt)
     
-    try:
-        respuesta = input(Fore.GREEN + Style.BRIGHT + ">>> " + Style.RESET_ALL)
-    except EOFError:
-        clear_console()
-        exit(0)
+    while True:
+        try:
+            respuesta = input(Fore.GREEN + Style.BRIGHT + ">>> " + Style.RESET_ALL)
+            # Si se proporciona una función de validación y la respuesta es válida, romper el bucle
+            if not validacion or validacion(respuesta):
+                break
+            else:
+                print(Fore.RED + "Entrada inválida, por favor intente de nuevo." + Style.RESET_ALL)
+        except EOFError:
+            clear_console()
+            exit(0)
     
     # Agregar el correo electrónico a datos_previos si se proporciona
     if email:
@@ -74,6 +81,8 @@ def pregunta_estilizada(prompt, datos_previos='', email=''):
     
     return respuesta
 
+def validacion_no_vacia(input_str):
+    return input_str.strip() != ''
 
 #Formulario
 def formulario():
@@ -91,8 +100,8 @@ def formulario():
             number = pregunta_estilizada('Número incorrecto. Ingrese Nº de Teléfono nuevamente: ')
         datos_persona += Fore.WHITE + Style.BRIGHT + f"Nº de Teléfono: {number}\n" + Style.RESET_ALL
 
-        name = pregunta_estilizada('Nombre de la persona: ', datos_persona)
-        surname = pregunta_estilizada('Apellido: ', datos_persona)
+        name = pregunta_estilizada('Nombre de la persona: ', datos_previos=datos_persona, validacion=validacion_no_vacia)
+        surname = pregunta_estilizada('Apellido: ', datos_previos=datos_persona, validacion=validacion_no_vacia)
         nombre_completo = Fore.WHITE + Style.BRIGHT + f"Nombre: {name} {surname}\n" + Style.RESET_ALL
         datos_persona += nombre_completo
 
@@ -120,7 +129,10 @@ def main():
     while True:
         firefoxsetup()
         global browser
-        geckodriver_path = os.path.join(sys._MEIPASS, 'geckodriver.exe')
+        if getattr(sys, 'frozen', False):
+            geckodriver_path = os.path.join(sys._MEIPASS, 'geckodriver')
+        else:
+            geckodriver_path = 'geckodriver'
         browser = webdriver.Firefox(firefox_binary=binary, executable_path = geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
 
         #SECURITAS DIRECT

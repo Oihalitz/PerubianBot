@@ -569,22 +569,6 @@ def main():
         except:
             print('homeserve: Skipeado (ERROR)')
 
-        #isalud
-        try:
-            browser.get('https://www.isalud.com/llama-gratis')
-            time.sleep(3)
-            browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="phone"]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="email"]').send_keys(email)
-            browser.find_element_by_xpath('/html/body/div[1]/section/div[2]/form/div/div[5]/div/a').click()
-            browser.find_element_by_xpath('//*[@id="contact_freecall"]').click()
-            print('iSalud: OK')
-        except KeyboardInterrupt:
-            browser.close()
-            quit()
-        except:
-            print('iSalud: Skipeado (ERROR)')
-
         #clinicaboccio
         try:
             browser.get('https://www.clinicaboccio.com/pide-cita/')

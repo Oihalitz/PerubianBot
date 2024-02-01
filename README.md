@@ -26,7 +26,7 @@ El PerubianBot es un programa que te permite introducir un número de teléfono 
 
 ### Instalación de las dependencias:
 ```
-pip install -r requierements.txt
+pip install -r requirements.txt
 ```
 
 ## Disclaimer:

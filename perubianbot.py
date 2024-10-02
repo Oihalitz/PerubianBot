@@ -15,7 +15,7 @@ import time
 import os
 from os import system
 
-version = 'Beta 2.0'
+version = 'Beta 2.1'
 global debug
 debug = 0
 
@@ -23,12 +23,12 @@ system("title " 'PerubianBot '+version)
 
 global perubian
 perubian = Fore.MAGENTA + Style.BRIGHT + r"""
-______               _     _               _____  _____ 
-| ___ \             | |   (_)             / __  \|  _  |
-| |_/ /__ _ __ _   _| |__  _  __ _ _ __   `' / /'| |/' |
-|  __/ _ \ '__| | | | '_ \| |/ _` | '_ \    / /  |  /| |
-| | |  __/ |  | |_| | |_) | | (_| | | | | ./ /___\ |_/ /
-\_|  \___|_|   \__,_|_.__/|_|\__,_|_| |_| \_____(_)___/ 
+  _____                _     _               ___   __ 
+ |  __ \              | |   (_)             |__ \ /_ |
+ | |__) |__ _ __ _   _| |__  _  __ _ _ __      ) | | |
+ |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \    / /  | |
+ | |  |  __/ |  | |_| | |_) | | (_| | | | |  / /_ _| |
+ |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)_|
 """ + Style.RESET_ALL
 
 menu = ConsoleMenu(Fore.YELLOW + perubian, "Seleccione un modo"+ Style.RESET_ALL)
@@ -168,21 +168,22 @@ def main():
         try:
             browser.get('https://www.vodafone.es/c/empresas/pymes/es/conectividad/red-infinity/')
             time.sleep(3)
-            browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+                time.sleep(1)
+            except:
+                pass
+            browser.find_element_by_xpath('/html/body/div[2]/main/div[9]/div/div/div/span/div/div/div/form-viewer/div/form/fieldset/div[2]/app-form-element-dispatcher[2]/span/app-select-element/div/div/div/select/option[1]').click()
+            browser.find_element_by_xpath('//*[@name="enterprise"]').send_keys(name)
+            browser.find_element_by_xpath('/html/body/div[2]/main/div[9]/div/div/div/span/div/div/div/form-viewer/div/form/fieldset/div[3]/app-form-element-dispatcher[3]/span/app-select-element/div/div/div/select/option[2]').click()
+            browser.find_element_by_xpath('//*[@name="givenName"]').send_keys(name)
+            browser.find_element_by_xpath('//*[@name="familyName"]').send_keys(surname)
+            browser.find_element_by_xpath('//*[@name="phoneNumber"]').send_keys(number)
+            browser.find_element_by_xpath('//*[@name="emailAddress"]').send_keys(email)
             time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[2]/main/div[1]/div/div/div/span/div/div/section/div[2]/div[2]/div[2]/div/section[1]/div/div/button').click()
-            time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[2]/main/div[4]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[1]/div[2]/label').click()
-            browser.find_element_by_xpath('//*[@id="facade-firstName"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="facade-lastName"]').send_keys(surname)
-            browser.find_element_by_xpath('//*[@id="facade-entreprise"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="facade-phoneNumber"]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="facade-email"]').send_keys(email)
-            time.sleep(1)
-            checkbox = browser.find_element_by_xpath("/html/body/div[2]/main/div[4]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[9]/div[1]/label")
-            checkbox = browser.find_element_by_xpath('/html/body/div[2]/main/div[4]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[9]/div[2]/label')
-            time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[2]/main/div[4]/div/div/span/div/div/div/div/div[1]/div[1]/div[2]/form[1]/div/div[10]/button/span[1]').click()
+            browser.find_element_by_xpath("//input[@type='checkbox' and contains(@class, 'fe-viewer__checkbox')]").click()
+            time.sleep(2)
+            browser.find_element_by_xpath('/html/body/div[2]/main/div[9]/div/div/div/span/div/div/div/form-viewer/div/form/fieldset/div[5]/app-form-element-dispatcher[4]/span/app-button-submit-element/div/div/button').click()
             time.sleep(8)
             print('Vodafone: OK')
         except:
@@ -194,8 +195,11 @@ def main():
         try:
             browser.get('https://www.euroinnova.edu.es/cursos#formulario')
             time.sleep(3)
-            browser.find_element_by_xpath('//*[@id="accept-cookies"]').click() #Cookies
-            time.sleep(2)
+            try:
+                browser.find_element_by_xpath('//*[@id="accept-cookies"]').click() #Cookies
+                time.sleep(2)
+            except:
+                pass
             browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/div[2]/button').click()
             time.sleep(2)
             browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
@@ -240,7 +244,7 @@ def main():
         try:
             url = "https://eshop.prod.k8s.masmovil.com/catalog/api/c2c/racctel"
             payload = {
-            "NumeroTelefonoCliente": "642177882",
+            "NumeroTelefonoCliente": +number,
             "Ambito": 4,
             "EsCliente": 0,
             "TipoCliente": -1,
@@ -312,12 +316,12 @@ def main():
             if response.status_code == 200:
                 print('Euskaltel: OK')
             else:   
-                print('Euskaltel Skipeado: ERROR')
+                print('Euskaltel: Skipeado (ERROR)')
         except KeyboardInterrupt:
             browser.close()
             quit()
         except:
-            print('Euskaltel Skipeado: ERROR')
+            print('Euskaltel: Skipeado (ERROR)')
 
         #ITEP
         try:
@@ -345,7 +349,7 @@ def main():
             browser.close()
             quit()
         except:
-            print('ITEP Skipeado: ERROR')
+            print('ITEP: Skipeado (ERROR)')
 
         #Prosegur
         try:
@@ -489,24 +493,6 @@ def main():
             quit()
         except:
             print('Proyectos y Seguros: Skipeado (ERROR)')
-
-        #urologiaclinicabilbao
-        try:
-            browser.get('https://www.urologiaclinicabilbao.com/te-llamamos.php')
-            time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div[3]/div[2]/div/div/div[1]/button[1]/span').click()
-            time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[1]/div[1]/input').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[1]/div[2]/input').send_keys(surname)
-            browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[1]/div[3]/input').send_keys(name)
-            browser.find_element_by_xpath('/html/body/div[1]/div[4]/div/div/div/div[1]/div[2]/form/div[2]/input').click()
-            time.sleep(3)
-            print('urologiaclinicaBilbao: OK')
-        except KeyboardInterrupt:
-            browser.close()
-            quit()
-        except:
-            print('urologiaclinicaBilbao: Skipeado (ERROR)')
 
         #emagister
         try:

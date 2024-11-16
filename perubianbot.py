@@ -205,6 +205,7 @@ def main():
             browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
             browser.find_element_by_xpath('//*[@id="mail"]').send_keys(email)
             browser.find_element_by_xpath('//*[@id="tel"]').send_keys(number)
+            browser.find_element_by_xpath('/html/body/div[9]/div/div/div[3]/form/div[3]/div[2]/div/select/option[10]').click()
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="privacidad"]').click()
             time.sleep(1)
@@ -224,7 +225,7 @@ def main():
                 except:
                     pass
                 time.sleep(1)
-                browser.find_element_by_xpath('/html/body/div[1]/div/main/div/div/div/article/div/div/div/div/div/form/section/div/div[2]/div/select/option[3]').click()
+                browser.find_element_by_xpath('/html/body/div[1]/div/main/div/div/div/article/div/div/div/div/div/form/section/div/div[2]/div/select/option[2]').click()
                 browser.find_element_by_xpath('//*[@id="edit-por-quien-preguntamos-"]').send_keys(name)
                 browser.find_element_by_xpath('//*[@id="edit-phone"]').send_keys(number)
                 browser.find_element_by_xpath('//*[@id="edit-phone-confirmation"]').send_keys(number)
@@ -240,40 +241,25 @@ def main():
         except:
             print('Genesis: Skipeado (ERROR)')
 
-        #Racctel+
+        #RACCTEL+
         try:
-            url = "https://eshop.prod.k8s.masmovil.com/catalog/api/c2c/racctel"
-            payload = {
-            "NumeroTelefonoCliente": +number,
-            "Ambito": 4,
-            "EsCliente": 0,
-            "TipoCliente": -1,
-            "Idioma": 3,
-            "Medio": "",
-            "Ruta": "https:"}
-            headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Content-Type': 'application/json',
-            'x-brand': 'RACCTEL',
-            'x-locale': 'es-ES',
-            'Cache-Control': 'public, s-maxage=180, stale-while-revalidate=60',
-            'Origin': 'https://www.racctelplus.com',
-            'Connection': 'keep-alive',
-            'Referer': 'https://www.racctelplus.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
-            'TE': 'trailers'}
-            requests.post(url, headers=headers, json=payload)
-            print('Racctel+: Ok')
+            browser.get('https://www.racctelplus.cat/es')
+            time.sleep(3)
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
+                time.sleep(1)
+            except:
+                pass
+            time.sleep(2)
+            browser.find_element_by_xpath('//*[@id="phone"]').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="c2c-submit"]/span').click()
+            time.sleep(3)
+            print('Racctel+ OK')
         except KeyboardInterrupt:
             browser.close()
             quit()
         except:
-            print('Racctel+: Skipeado (ERROR)')
+            print('Racctel+ Skipeado: ERROR')
 
         #JAZZTEL
         try:
@@ -292,36 +278,23 @@ def main():
 
         #Euskaltel
         try:
-            url = "https://www.euskaltel.com/CanalOnline/zonas/clicktocall/callmenow_ajax.jsp"
-
-            payload = 'ambito=1&idioma=0&cliente=1&telefono='+number+'&contratar=1&urlActual=%2FCanalOnline%2Fzonas%2Fclicktocall%2Fpopup_callmenow_embed.jsp&medio=undefined&urlPadre=ofertas%2Fpara-ti'
-            headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0',
-            'Accept': '*/*',
-            'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'X-Requested-With': 'XMLHttpRequest',
-            'Origin': 'https://www.euskaltel.com',
-            'Alt-Used': 'www.euskaltel.com',
-            'Connection': 'keep-alive',
-            'Referer': 'https://www.euskaltel.com/CanalOnline/zonas/clicktocall/popup_callmenow_embed.jsp?callmenow_idioma=0&callmenow_cliente=1&callmenow_telefono='+number+'&callmenow_email_cliente=-1&callmenow_medio=undefined',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'TE': 'trailers',
-            'Cookie': 'f5avraaaaaaaaaaaaaaaa_session_=LFLCBFHHMCDDGCOBKDNBPIIMEMIDCGLBPLICDHNOEOBAFEDOOBIENKMPBLPKIFNKMLEDEECAPCPIOCCCPNOAGJALCHGBENALMHKAOHODGADLEGBLLBBJLOINKIHCNEPP; JSESSIONID=bzNgsethFpiIXEUljvS8VT8B.node22; BIGipServer~Euskaltel~pool_webpubpro_80=rd3o00000000000000000000ffffac12cf08o80; ektAnonimo=20231227195242906; esClienteEktIp=0'
-            }
-            response = requests.request("POST", url, headers=headers, data=payload)
-            if response.status_code == 200:
-                print('Euskaltel: OK')
-            else:   
-                print('Euskaltel: Skipeado (ERROR)')
+            browser.get('https://www.euskaltel.com/?idioma=esp')
+            time.sleep(3)
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
+                time.sleep(1)
+            except:
+                pass
+            time.sleep(2)
+            browser.find_element_by_xpath('//*[@id="phone"]').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="c2c-submit"]/span').click()
+            time.sleep(3)
+            print('Euskaltel OK')
         except KeyboardInterrupt:
             browser.close()
             quit()
         except:
-            print('Euskaltel: Skipeado (ERROR)')
+            print('Euskaltel Skipeado: ERROR')
 
         #ITEP
         try:
@@ -332,13 +305,14 @@ def main():
                 time.sleep(1)
             except:
                 pass
-            browser.find_element_by_xpath('/html/body/header/div/div[5]/div/p/button').click() # Solicitar Informacion
+            browser.find_element_by_xpath('//*[@id="block-cabecerasolicitainformacion"]/p/button').click() # Solicitar Informacion
             time.sleep(1)
-            browser.find_element_by_xpath('//*[@id="edit-email--2"]').send_keys(email)
-            browser.find_element_by_xpath('//*[@id="edit-phone--2"]').send_keys(number)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-name--')]").send_keys(name)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-email--')]").send_keys(email)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-phone--')]").send_keys(number)
             browser.find_element_by_xpath('//*[@id="edit-cp--2"]').send_keys("08002")
-            browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/div/form/div[4]/select/optgroup[1]/option[2]').click()
-            browser.find_element_by_xpath('/html/body/div[4]/div/div[2]/div/div/form/div[5]/select/option[2]').click()
+            browser.find_element_by_xpath('/html/body/div[5]/div/div[2]/div/div/form/div[5]/select/option[2]').click()
+            browser.find_element_by_xpath('/html/body/div[5]/div/div[2]/div/div/form/div[6]/select/optgroup[1]/option[4]').click()
             browser.find_element_by_xpath("//*[starts-with(@id, 'edit-conditions--')]").click()
             browser.find_element_by_xpath("//*[starts-with(@id, 'edit-educa-consent--')]").click()
             time.sleep(1)
@@ -353,13 +327,17 @@ def main():
 
         #Prosegur
         try:
-            browser.get('https://www.prosegur.es/esp/alarmahogar/sem')
+            browser.get('https://www.prosegur.es/')
             time.sleep(3)
-            browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/button').click()
+            try:
+                browser.find_element_by_xpath('//*[@id="didomi-notice-agree-button"]/span').click()
+                time.sleep(1)
+            except:
+                pass
             time.sleep(1)
-            browser.find_element_by_xpath('/html/body/section[2]/div/div/div/div[2]/section/div/div/div/div/div[1]/div[2]/form/div[2]/div[2]/div/input').send_keys(number)
-            browser.find_element_by_xpath('/html/body/section[2]/div/div/div/div[2]/section/div/div/div/div/div[1]/div[2]/form/div[2]/div[3]/div/fieldset/label/span').click()
-            browser.find_element_by_xpath('/html/body/section[2]/div/div/div/div[2]/section/div/div/div/div/div[1]/div[2]/form/div[2]/div[4]/div/div/div/button/span').click()
+            browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[2]/div/input').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[4]/div/fieldset/label/span').click()
+            browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[5]/div/div/div/button/span').click()
             time.sleep(3)
             print('Prosegur: OK')
         except KeyboardInterrupt:
@@ -376,13 +354,9 @@ def main():
                 browser.find_element_by_xpath('//button[@id="didomi-notice-agree-button"]').click()
             except:
                 pass
-            browser.find_element_by_xpath('//*[@id="telefono"]').send_keys(number)
-            time.sleep(2)
-            try:
-                browser.find_element_by_xpath('/html/body/div[1]/section/section/form/div[2]/div/div[2]/a').click() # Buttom 1
-            except:
-                browser.find_element_by_xpath('/html/body/div[3]/section/section/form/div[2]/div/div[2]/a').click() # Buttom 2
-            time.sleep(3)
+            browser.find_element_by_xpath('//*[@id="telefonoC2c"]').send_keys(number)
+            time.sleep(1)
+            browser.find_element_by_xpath('/html/body/div[1]/div/section/div[2]/div[2]/div/form/div[5]/a').click() # Buttom 1
             print('Linea Directa: OK')
         except KeyboardInterrupt:
             browser.close()
@@ -429,12 +403,14 @@ def main():
         try:
             browser.get('https://selectra.es/internet-telefono/companias/orange/telefono')
             time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/button[1]').click() #Cookies
+            try:
+                browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/button[1]').click() #Cookies
+            except:
+                pass
             time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[2]/div/div/div[1]/div/main/div[2]/div[1]/article/div/div[1]/p/a[2]').click()
+            browser.find_element_by_xpath('/html/body/div[2]/div/div/div[1]/div/aside/div[1]/div[1]/div/div/div[1]/a[2]').click()
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="callback-modal__phone"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div/section/div[3]/form/div[3]/label/span[1]').click()
             browser.find_element_by_xpath('//*[@id="callback-modal__submit"]').click()
             time.sleep(3)
             print('Orange: OK')
@@ -463,11 +439,16 @@ def main():
         try:
             browser.get('https://www.iberdrola.es/')
             time.sleep(4)
-            browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
+                time.sleep(1)
+            except:
+                pass
             time.sleep(2)
             browser.find_element_by_xpath('//*[@id="telf-lc-header"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[1]/main/div[2]/section[1]/div[2]/div/div/div[2]/form/div[2]/label').click()
-            browser.find_element_by_xpath('/html/body/div[1]/main/div[2]/section[1]/div[2]/div/div/div[2]/div/button/span').click()
+            browser.find_element_by_xpath('//*[@id="checks"]/div[1]/label').click()
+            browser.find_element_by_xpath('//*[@id="checks"]/div[2]/label').click()
+            browser.find_element_by_xpath('//*[@id="btn-click-to-call-luz"]/span').click()
             time.sleep(3)
             print('Iberdrola: OK')
         except KeyboardInterrupt:
@@ -480,12 +461,12 @@ def main():
         try:
             browser.get('https://www.proyectosyseguros.com/te-llamamos/')
             time.sleep(3)
-            browser.find_element_by_xpath('//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]').click()
-            browser.find_element_by_xpath('/html/body/div[4]/div/div/div/div/form/div[3]/div[2]/select/optgroup[1]/option[7]').click()
-            browser.find_element_by_xpath('//*[@id="llamada-nombre"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="llamada-telefono"]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="llamada-lopd"]').click()
-            browser.find_element_by_xpath('//*[@id="llamada-enviar"]').click()
+            browser.find_element_by_xpath('//*[@id="Nombre"]').send_keys(name)
+            browser.find_element_by_xpath('//*[@id="Email"]').send_keys(email)
+            browser.find_element_by_xpath('//*[@id="Telefono"]').send_keys(number)
+            browser.find_element_by_xpath('/html/body/div[3]/main/div/div/div/div/div/form/div[3]/div/div[1]/select/option[2]').click()
+            browser.find_element_by_xpath('//*[@id="acepto_condiciones"]').click()
+            browser.find_element_by_xpath('/html/body/div[3]/main/div/div/div/div/div/form/div[6]/button/span[1]').click()
             time.sleep(3)
             print('Proyectos y Seguros: OK')
         except KeyboardInterrupt:
@@ -498,6 +479,11 @@ def main():
         try:
             browser.get('https://www.emagister.com/')
             time.sleep(2)
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
+                time.sleep(1)
+            except:
+                pass
             browser.find_element_by_xpath('/html/body/header/div[2]/div/div[3]/div/nav/div[1]/div/div/section[2]/button').click()
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="callMe-phone"]').send_keys(number)
@@ -511,30 +497,12 @@ def main():
         except:
             print('emagister: Skipeado (ERROR)')
 
-        #mfollanaortodoncia
-        try:
-            browser.get('https://www.mfollanaortodoncia.com/contactar/')
-            time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div[1]/div[5]/a[1]').click()
-            time.sleep(1)
-            browser.find_element_by_xpath('//*[@id="input_1_1"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="input_1_4"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[2]/div[2]/main/div/section/div/div/div[2]/div/div/div/div[2]/form/div[1]/ul/li[3]/div/div/select/option[1]').click()
-            browser.find_element_by_xpath('//*[@id="input_1_5_1"]').click()
-            browser.find_element_by_xpath('//*[@id="gform_submit_button_1"]').click()
-            print('mfollanaortodoncia: OK')
-        except KeyboardInterrupt:
-            browser.close()
-            quit()
-        except:
-            print('mfollanaortodoncia: Skipeado (ERROR)')
-
         #homeserve
         try:
             browser.get('https://www.homeserve.es/servicios-reparaciones/fontaneros')
             time.sleep(3)
             try:
-                browser.find_element_by_xpath('/html/body/div[2]/div[2]/div/div[2]/div[3]/div/button').click() #Cookies
+                browser.find_element_by_xpath('//*[@id="basicCookies"]/div/div[2]/div[3]/div/button').click() #Cookies
             except:
                 pass
             time.sleep(1)
@@ -581,12 +549,13 @@ def main():
                 browser.find_element_by_xpath('/html/body/div[3]/div[2]/button[2]').click() #Cookies
             except:
                 pass
-            browser.find_element_by_xpath('/html/body/div[1]/div[2]/div/div/section[2]/div/div/div/div[1]/div/div/div/div/a/span/span[2]').click()
+            browser.find_element_by_xpath('/html/body/div[1]/div[1]/div[3]/div/div[2]/div/div/nav/div/ul/li[4]/a/span').click()
             time.sleep(1)
-            browser.find_element_by_xpath('//*[@id="nombre-contacto"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="telefono-contacto"]]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="terminos-contacto"]').click()
-            browser.find_element_by_xpath('//*[@id="btn-submit-contacto"]').click()
+            browser.find_element_by_xpath('//*[@id="nombre-popup"]').send_keys(name)
+            browser.find_element_by_xpath('//*[@id="telefono-popup"]').send_keys(number)
+            browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/section/div/div/div/div/div/form/div[3]/div[1]/select/option[3]').click()
+            browser.find_element_by_xpath('//*[@id="terminos-popup"]').click()
+            browser.find_element_by_xpath('//*[@id="btn-submit-popup"]').click()
             time.sleep(2)
             print('PontGrup: OK')
         except KeyboardInterrupt:
@@ -603,8 +572,8 @@ def main():
                 browser.find_element_by_xpath('//*[@id="elpaso-button-accept"]').click() #Cookies
             except:
                 pass
-            browser.find_element_by_xpath('/html/body/div[2]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/div[1]/input').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[2]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/label/span').click()
+            browser.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/div[1]/input').send_keys(number)
+            browser.find_element_by_xpath('/html/body/div[1]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/label/span').click()
             time.sleep(1)
             browser.find_element_by_xpath('/html/body/div[2]/div[1]/div/main/div/div[1]/div[1]/div[1]/div[2]/form/div[3]/button/span').click()
             time.sleep(2)
@@ -640,16 +609,18 @@ def main():
         try:
             browser.get('https://www.generali.es/blog/tuasesorsalud/solicitar-informacion/')
             time.sleep(3)
-            browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
-            time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[1]/div[2]/label').click()
-            browser.find_element_by_xpath('//*[contains(@id,"email")]').send_keys(email)
-            browser.find_element_by_xpath('//*[contains(@id,"firstname")]').send_keys(name)
-            browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[3]/div[1]/div/select/option[2]').click()
-            browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[3]/div[2]/div/select/option[2]').click()
-            browser.find_element_by_xpath('//*[contains(@id,"phone")]').send_keys(number)
-            browser.find_element_by_xpath('//*[contains(@id,"autorizacion_ofertas_comerciales")]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[3]/div[2]/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div/form/div[16]/div[2]/input').click()
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+                time.sleep(2)
+            except:
+                pass
+            browser.find_element_by_xpath('/html/body/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[1]/div[2]/label').click()
+            browser.find_element_by_xpath('//*[@id="cmb-form--name"]').send_keys(name)
+            browser.find_element_by_xpath('//*[@id="cmb-form--phone"]').send_keys(number)
+            browser.find_element_by_xpath('/html/body/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div[3]/select/option[2]').click()
+            browser.find_element_by_xpath('/html/body/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div[4]/select/option[2]').click()
+            browser.find_element_by_xpath('/html/body/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[2]/div[8]/div/label').click()
+            browser.find_element_by_xpath('/html/body/section[1]/div/section[2]/div/main/div/div/div/div/form/div[1]/div[3]/div[3]/button/span').click()
             time.sleep(5)
             print('Generali: OK')
         except KeyboardInterrupt:
@@ -662,8 +633,8 @@ def main():
         try:
             browser.get('https://te-llamamos.regal.es/user-details')
             time.sleep(3)
-            browser.find_element_by_xpath('//input[@id="primaryPhoneInput"][1]').send_keys(number)
-            browser.find_element_by_xpath('//input[@id="primaryPhoneInput"][2]').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="primaryPhoneInput"][1]').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="primaryPhoneInput"][2]').send_keys(number)
             browser.find_element_by_xpath('//*[@id="continueButton"]')
             time.sleep(5)
             print('Regal: OK')

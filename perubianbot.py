@@ -143,7 +143,7 @@ def main():
         else:
             geckodriver_path = 'geckodriver'
         browser = webdriver.Firefox(firefox_binary=binary, executable_path = geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
-        
+
         #SECURITAS DIRECT
         if interrupted:
             print("galleta")
@@ -240,6 +240,11 @@ def main():
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="phoneNumber"]').send_keys(number)
             time.sleep(1)
+            try:
+                browser.find_element_by_xpath('/html/body/div[1]/div[1]/div[2]/div[3]/div/div[2]/form/div/div[3]/div/select/option[2]').click() #Cookies
+                time.sleep(1)
+            except:
+                pass
             browser.find_element_by_xpath('//*[@id="env"]').click()
             time.sleep(3)
             print('Jazztel: OK')
@@ -290,27 +295,28 @@ def main():
             print('Pelayo: ERROR')
 
         #Movistar
-        '''try:
+        try:
             browser.get('https://www.movistar.es/estaticos/html/modal/modal-formulario-C2C-empresas-inside-sales-new.html')
-            time.sleep(3)
+            time.sleep(1)
             try:
                 browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
                 time.sleep(1)
             except:
                 pass
-            time.sleep(2)
-            browser.find_element_by_xpath('/html/body/div/div/div/div/form/div[1]/div[1]/label').send_keys(name)
-            browser.find_element_by_xpath('/html/body/div/div/div/div/form/div[1]/div[2]/label').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div/div/div/div/form/div[1]/div[3]/label').send_keys('D09818238')
+            time.sleep(1)
+            browser.find_element_by_xpath('//*[@id="nameC2CplainModal_IS"]').send_keys(name)
+            browser.find_element_by_xpath('//*[@id="tlfC2CplainModal_IS"]').send_keys(number)
+            time.sleep(1)
+            browser.find_element_by_xpath('//*[@id="cifC2CplainModal_IS"]').send_keys('D09818238')
             browser.find_element_by_xpath('/html/body/div[1]/div/div/div/form/div[1]/div[4]/select/option[33]').click()
             browser.find_element_by_xpath('//*[@id="modal__emp__cta"]').click()
-            time.sleep(3)
+            time.sleep(2)
             print('Movistar OK')
         except KeyboardInterrupt:
             browser.close()
             quit()
         except:
-            print('Movistar Skipeado: ERROR')'''
+            print('Movistar Skipeado: ERROR')
 
         #Soliss
         try:
@@ -380,10 +386,10 @@ def main():
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysideCallBtnBySideData_')]").click()
             try:
                 browser.find_element_by_xpath("/html/body/div[51]/div[1]/div[2]/div/div[1]/div[2]/div[2]/div[1]/input[1]").click()
-                time.sleep(2)
+                time.sleep(1)
             except:
                 pass
-            time.sleep(1)
+            time.sleep(2)
             print('MasMovil Alarmas: OK')
         except KeyboardInterrupt:
             browser.close()
@@ -401,9 +407,18 @@ def main():
             except:
                 pass
             time.sleep(1)
-            browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[2]/div/input').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[4]/div/fieldset/label/span').click()
-            browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[5]/div/div/div/button/span').click()
+            try:#Deisgn 1
+                browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[2]/div/input').send_keys(number)
+                browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[4]/div/fieldset/label/span').click()
+                browser.find_element_by_xpath('//*[@id="formulario-hero-composicion-prosegur-spain-cc-activo"]/div[2]/div[5]/div/div/div/button/span').click()
+            except:
+                pass
+            try:#Design 2
+                browser.find_element_by_xpath('/html/body/main/div/section/div/div/div[2]/section[2]/div/div/div/div/div[1]/div[2]/form/div[2]/div[2]/div/input').send_keys(number)
+                browser.find_element_by_xpath('/html/body/main/div/section/div/div/div[2]/section[2]/div/div/div/div/div[1]/div[2]/form/div[2]/div[4]/div/fieldset/label/span').click()
+                browser.find_element_by_xpath('/html/body/main/div/section/div/div/div[2]/section[2]/div/div/div/div/div[1]/div[2]/form/div[2]/div[5]/div/div/div/button/span').click()
+            except:
+                pass
             time.sleep(3)
             print('Prosegur: OK')
         except KeyboardInterrupt:
@@ -421,6 +436,11 @@ def main():
             except:
                 pass
             browser.find_element_by_xpath('//*[@id="telefonoC2c"]').send_keys(number)
+            try:
+                browser.find_element_by_xpath('/html/body/div[1]/div/section/div[2]/div[2]/div/form/div[4]/div/div[1]/select/option[2]').click()
+                browser.find_element_by_xpath('/html/body/div[1]/div/section/div[2]/div[2]/div/form/div[4]/div/div[2]/select/option[2]').click()
+            except:
+                pass
             time.sleep(1)
             browser.find_element_by_xpath('/html/body/div/div/section/div[2]/div[2]/div/form/div[5]/a').click() # Buttom 1
             time.sleep(2)
@@ -468,19 +488,22 @@ def main():
 
         #Orange
         try:
-            browser.get('https://selectra.es/internet-telefono/companias/orange/telefono')
-            time.sleep(2)
-            try:
-                browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/button[3]').click() #Cookies
-            except:
-                pass
-            time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div[2]/div/div/div[1]/div/aside/div[1]/div[1]/div/div/div[1]/a[2]').click()
-            time.sleep(2)
-            browser.find_element_by_xpath('//*[@id="callback-modal__phone"]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="callback-modal__submit"]').click()
-            time.sleep(3)
-            print('Orange: OK')
+            if current_time > start and current_time < end:
+                browser.get('https://selectra.es/internet-telefono/companias/orange/telefono')
+                time.sleep(2)
+                try:
+                    browser.find_element_by_xpath('/html/body/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/button[3]').click() #Cookies
+                except:
+                    pass
+                time.sleep(1)
+                browser.find_element_by_xpath('/html/body/div[2]/div/div/div[1]/div/aside/div[1]/div[1]/div/div/div[1]/a[2]').click()
+                time.sleep(2)
+                browser.find_element_by_xpath('//*[@id="callback-modal__phone"]').send_keys(number)
+                browser.find_element_by_xpath('//*[@id="callback-modal__submit"]').click()
+                time.sleep(3)
+                print('Orange: OK')
+            else:
+                print('Orange: Skipeado (Fuera de Horario)')
         except KeyboardInterrupt:
             browser.close()
             quit()
@@ -488,7 +511,7 @@ def main():
             print('Orange: Skipeado (ERROR)')
 
         #HomeGO
-        '''try:
+        try:
             browser.get('https://homego.es/alarmas-para-casa-precios-no-cliente')
             time.sleep(3)
             try:
@@ -496,8 +519,8 @@ def main():
                 time.sleep(2)
             except:
                 pass
-            browser.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/main/section[1]/div[2]/div[1]/div/button').click()
-            time.sleep(2)
+            browser.execute_script("window.scrollBy(0, 500);")
+            time.sleep(3)
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysidePhoneBySideData_')]").send_keys(number)
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysideCallBtnBySideData_')]").click()
             try:
@@ -511,7 +534,7 @@ def main():
             browser.close()
             quit()
         except:
-            print('HomeGO: Skipeado (ERROR)')'''
+            print('HomeGO: Skipeado (ERROR)')
 
         #Iberdrola
         try:
@@ -689,11 +712,16 @@ def main():
             except:
                 pass
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysidePhoneBySideData_')]").send_keys(number)
-            try:
+            try:#Horario
                 browser.find_element_by_xpath('/html/body/div[1]/div[1]/div/div/div/div/div/div/div/div/div[1]/fieldset/label/select/option[2]').click()
             except:
                 pass
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysideCallBtnBySideData_')]").click()
+            try:#Encuesta
+                browser.find_element_by_xpath("//*[starts-with(@id, 'BysideEncuestaBySideData_')]").click()
+                time.sleep(2)
+            except:
+                pass
             time.sleep(2)
             print('MasMovil: OK')
         except KeyboardInterrupt:
@@ -705,7 +733,7 @@ def main():
         #ElPaso2000
         try:
             browser.get('https://www.elpaso2000.com/te-llamamos/')
-            time.sleep(3)
+            time.sleep(1)
             try:
                 browser.find_element_by_xpath('//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]').click() #Cookies
                 time.sleep(2)

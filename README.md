@@ -17,7 +17,7 @@ El PerubianBot es un programa que te permite introducir un número de teléfono 
 - [ ] <b>Modo contrareembolso</b> (Próximamente): Para aquellos más aventureros se garantiza que petará el buzón de toda la información comercial que recibirás en tu casa. ¿Cuál será la mejor tarifa?. Alarmas, Telefonía, Luz, Gas... ¡ELIGE TU AVENTURA!
 
 ### Dependencias:
-- Firefox
+- <a href="https://github.com/mozilla/geckodriver/releases">Firefox</a>
 - <a href="https://github.com/mozilla/geckodriver/releases">GeckoDriver</a>
 - selenium
 - requests
@@ -27,6 +27,10 @@ El PerubianBot es un programa que te permite introducir un número de teléfono 
 ### Instalación de las dependencias:
 ```
 pip install -r requirements.txt
+```
+### Ejecución:
+```
+python perubianbot.py
 ```
 
 ## Disclaimer:
@@ -45,4 +49,3 @@ pip install -r requirements.txt
 >Si tienes preguntas o comentarios sobre estos Términos y Condiciones, por favor contáctanos por mp.<br>
 >Al utilizar la Aplicación, aceptas estos Términos y Condiciones. Si no estás de acuerdo con ellos, te recomendamos no utilizar la Aplicación.<br>
 El desarrollador.
-

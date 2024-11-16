@@ -564,6 +564,10 @@ def main():
                 pass
             browser.execute_script("window.scrollBy(0, 500);")
             time.sleep(3)
+            try: #Hora
+                browser.find_element_by_xpath("//*[starts-with(@id, 'BysideScheduleBySideData_')]/option[2]").click()
+            except:
+                pass
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysidePhoneBySideData_')]").send_keys(number)
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysideCallBtnBySideData_')]").click()
             try:
@@ -951,8 +955,8 @@ def main():
             time.sleep(3)
             browser.find_element_by_xpath('(//*[@id="primaryPhoneInput"])[1]').send_keys(number)
             browser.find_element_by_xpath('(//*[@id="primaryPhoneInput"])[2]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="continueButton"]')
-            time.sleep(5)
+            browser.find_element_by_xpath('//*[@id="continueButton"]').click()
+            time.sleep(2)
             print('Regal: OK')
         except KeyboardInterrupt:
             browser.close()

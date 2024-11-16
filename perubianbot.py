@@ -254,6 +254,49 @@ def main():
         except:
             print('Jazztel: Skipeado (ERROR)')
 
+        #Ford
+        try:
+            browser.get('https://www.infoford.es/c2c/iframe/flotas/ford-pro-expert/')
+            time.sleep(1)
+            try:
+                browser.find_element_by_xpath('//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]').click() #Cookies
+                time.sleep(2)
+            except:
+                pass
+            field = browser.find_element_by_xpath('//*[@id="telefono"]')
+            browser.execute_script("arguments[0].value = arguments[1];", field, number)
+            browser.find_element_by_xpath('//*[@id="legales"]').click()
+            time.sleep(1)
+            browser.find_element_by_xpath('//*[@id="btn-enviar"]').click()
+            time.sleep(2)
+            print('Ford: OK')
+        except KeyboardInterrupt:
+            browser.close()
+            quit()
+        except:
+            print('Ford: Skipeado (ERROR)')
+    
+        #spamovil
+        try:
+            browser.get('https://spamovil.es/te-llamamos-gratis/')
+            time.sleep(1)
+            try:
+                browser.find_element_by_xpath('//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]').click() #Cookies
+                time.sleep(2)
+            except:
+                pass
+            browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[1]/label/span/input').send_keys(name)
+            browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[2]/label/span/input').send_keys(number)
+            browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[3]/label/span/span/span/input').click()
+            browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[4]/input').click()
+            time.sleep(2)
+            print('spamovil: OK')
+        except KeyboardInterrupt:
+            browser.close()
+            quit()
+        except:
+            print('spamovil: Skipeado (ERROR)')
+
         #Euskaltel
         try:
             browser.get('https://www.euskaltel.com/?idioma=esp')
@@ -558,6 +601,29 @@ def main():
         except:
             print('Iberdrola: Skipeado (ERROR)')
 
+        #iSalud
+        try:
+            browser.get('https://asisa.isalud.com/llama-gratis')
+            time.sleep(4)
+            try:
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
+                time.sleep(1)
+            except:
+                pass
+            time.sleep(2)
+            browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
+            browser.find_element_by_xpath('//*[@id="phone"]').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="email"]').send_keys(email)
+            browser.find_element_by_xpath('/html/body/div[1]/section[1]/div[2]/form/div/div[5]/div/a').click()
+            browser.find_element_by_xpath('//*[@id="contact_freecall"]').click()
+            time.sleep(3)
+            print('iSalud: OK')
+        except KeyboardInterrupt:
+            browser.close()
+            quit()
+        except:
+            print('iSalud: Skipeado (ERROR)')
+
         #proyectosyseguros
         try:
             browser.get('https://www.proyectosyseguros.com/te-llamamos/')
@@ -657,18 +723,19 @@ def main():
         except:
             print('homeserve: Skipeado (ERROR)')
 
-        '''#clinicaboccio
+        #clinicaboccio
         try:
             browser.get('https://www.clinicaboccio.com/pide-cita/')
             time.sleep(3)
             try:
-                browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/button[1]').click() #Cokies
+                browser.find_element_by_xpath('//*[@id="cmplz-cookiebanner-container"]/div/div[6]/button[1]').click() #Cokies
             except:
                 pass
             browser.find_element_by_xpath('//*[@id="input_5_1"]').send_keys(name)
             browser.find_element_by_xpath('//*[@id="input_5_4"]').send_keys(number)
-            checkbox = browser.find_element(By.ID, "input_5_5_1")
-            checkbox.click()
+            browser.execute_script("window.scrollBy(0, 600);")
+            time.sleep(3)
+            browser.find_element_by_xpath('//*[@id="input_5_5_1"]').click()
             browser.find_element_by_xpath('//*[@id="gform_submit_button_5"]').click()
             time.sleep(2)
             print('Clinica Boccio: OK')
@@ -677,30 +744,6 @@ def main():
             quit()
         except:
             print('Clinica Boccio: Skipeado (ERROR)')
-
-        #pontgrup
-        try:
-            browser.get('https://www.pontgrup.com/contacto/')
-            time.sleep(3)
-            try:
-                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
-                time.sleep(2)
-            except:
-                pass
-            browser.find_element_by_xpath('/html/body/div[1]/div[1]/div[3]/div/div[2]/div/div/nav/div/ul/li[4]/a/span').click()
-            time.sleep(1)
-            browser.find_element_by_xpath('//*[@id="nombre-popup"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="telefono-popup"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/section/div/div/div/div/div/form/div[3]/div[1]/select/option[2]').click()
-            browser.find_element_by_xpath('//*[@id="terminos-popup"]').click()
-            browser.find_element_by_xpath('//*[@id="btn-submit-popup"]').click()
-            time.sleep(2)
-            print('PontGrup: OK')
-        except KeyboardInterrupt:
-            browser.close()
-            quit()
-        except:
-            print('PontGrup: Skipeado (ERROR)')'''
 
         #MásMóvil
         try:

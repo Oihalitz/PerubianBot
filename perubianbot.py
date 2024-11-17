@@ -764,6 +764,7 @@ def main():
             except:
                 pass
             browser.find_element_by_xpath("//*[starts-with(@id, 'BysideCallBtnBySideData_')]").click()
+            time.sleep(2)
             try:#Encuesta
                 browser.find_element_by_xpath("//*[starts-with(@id, 'BysideEncuestaBySideData_')]").click()
                 time.sleep(2)

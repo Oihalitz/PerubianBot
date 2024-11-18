@@ -15,11 +15,13 @@ import time
 import os
 from os import system
 
-version = '2.1'
+version = '2.1.1'
 global debug
 debug = 0
 
 system("title " 'PerubianBot '+version)
+
+
 
 global perubian
 perubian = Fore.MAGENTA + Style.BRIGHT + r"""
@@ -33,11 +35,11 @@ perubian = Fore.MAGENTA + Style.BRIGHT + r"""
 
 menu = ConsoleMenu(Fore.YELLOW + perubian, "Seleccione un modo"+ Style.RESET_ALL)
 
-#Firefox Configuration
 def firefoxsetup():
     global binary, profile, PATH_TO_DEV_NULL
+
     if os.name == 'nt':  # Windows
-        binary = 'C:\\Program Files\\Mozilla Firefox\\firefox.exe'
+        binary = r'C:\Program Files\Mozilla Firefox\firefox.exe'
         PATH_TO_DEV_NULL = 'nul'
     elif os.uname().sysname == 'Darwin':  # macOS
         binary = '/Applications/Firefox.app/Contents/MacOS/firefox'
@@ -45,6 +47,13 @@ def firefoxsetup():
     else:
         binary = '/usr/bin/firefox'
         PATH_TO_DEV_NULL = '/dev/null'
+
+    # Comprobar si el binario de Firefox existe
+    if not os.path.exists(binary):
+        print("Error: Firefox no está instalado.")
+        time.sleep(5)
+        sys.exit(1)
+
     profile = webdriver.FirefoxProfile()
     profile.set_preference("media.autoplay.default", 0)
     profile.accept_untrusted_certs = True
@@ -894,11 +903,11 @@ def main():
             print('FiNetwork: Skipeado (ERROR)')
 
         #Nara
-        '''try:
+        try:
             browser.get('https://www.naradigital.es/te-llamamos')
             time.sleep(2)
             try:
-                browser.find_element_by_xpath('//*[@id="banner"]/div[2]/a[3]').click() #Cookies
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click() #Cookies
                 time.sleep(2)
             except:
                 pass
@@ -906,10 +915,18 @@ def main():
             browser.find_element_by_xpath('//*[@id="ContentPlaceHolder1_ContentPlaceHolder1_embCTC_txtTelefono"]').send_keys(number)
             browser.find_element_by_xpath('//*[@id="ContentPlaceHolder1_ContentPlaceHolder1_embCTC_txtEmail"]').send_keys(email)
             browser.find_element_by_xpath('/html/body/form/div[3]/div[1]/div[3]/div/div/div/div[1]/div[2]/div[1]/div[6]/div/label[2]/select/option[2]').click()
+            time.sleep(5)
             try:
                 browser.find_element_by_xpath('/html/body/form/div[3]/div[1]/div[3]/div/div/div/div[1]/div[2]/div[1]/div[8]/div/label[2]/select/option[2]').click()
+                time.sleep(5)
             except:
                 pass
+            try:
+                browser.find_element_by_xpath('/html/body/form/div[3]/div[1]/div[3]/div/div/div/div[1]/div[2]/div[1]/div[7]/div/label[2]/select/option[2]').click()
+                time.sleep(5)
+            except:
+                pass
+            time.sleep(5)
             browser.find_element_by_xpath('/html/body/form/div[3]/div[1]/div[3]/div/div/div/div[1]/div[2]/div[1]/div[8]/div/div/label/i').click()
             browser.find_element_by_xpath('//*[@id="btnLlamar"]').click()
             time.sleep(1)
@@ -919,7 +936,8 @@ def main():
             quit()
         except:
             print('Nara: Skipeado (ERROR)')
-
+        
+        '''
         #Clinica Londres
         try:
             browser.get('https://www.clinicalondres.es/llamadme')

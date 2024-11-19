@@ -15,12 +15,8 @@ import os
 from os import system
 
 version = '2.1.1'
-global debug
-debug = 0
 
 system("title " 'PerubianBot '+version)
-
-
 
 global perubian
 perubian = Fore.MAGENTA + Style.BRIGHT + r"""
@@ -97,27 +93,21 @@ def validacion_no_vacia(input_str):
 def formulario():
     global email 
     prefijos = ('6', '7', '9')
-    if debug == 1:
-        print(perubian)
-        print('DEBUG MODE ON')
-        global number, name, surname
-        number, name, surname, email = '666666666', 'NombrePrueba', 'ApellidoPrueba', 'CorreoPrueba@gmail.com'
-    else:
-        datos_persona = ''
-        number = pregunta_estilizada('Nº de Teléfono: ')
-        while len(number) != 9 or not number.isdigit() or number[0] not in prefijos:
-            number = pregunta_estilizada('Número incorrecto. Ingrese Nº de Teléfono nuevamente: ')
-        datos_persona += Fore.WHITE + Style.BRIGHT + f"Nº de Teléfono: {number}\n" + Style.RESET_ALL
+    datos_persona = ''
+    number = pregunta_estilizada('Nº de Teléfono: ')
+    while len(number) != 9 or not number.isdigit() or number[0] not in prefijos:
+        number = pregunta_estilizada('Número incorrecto. Ingrese Nº de Teléfono nuevamente: ')
+    datos_persona += Fore.WHITE + Style.BRIGHT + f"Nº de Teléfono: {number}\n" + Style.RESET_ALL
 
-        name = pregunta_estilizada('Nombre de la persona: ', datos_previos=datos_persona, validacion=validacion_no_vacia)
-        surname = pregunta_estilizada('Apellido: ', datos_previos=datos_persona, validacion=validacion_no_vacia)
-        nombre_completo = Fore.WHITE + Style.BRIGHT + f"Nombre: {name} {surname}\n" + Style.RESET_ALL
-        datos_persona += nombre_completo
+    name = pregunta_estilizada('Nombre de la persona: ', datos_previos=datos_persona, validacion=validacion_no_vacia)
+    surname = pregunta_estilizada('Apellido: ', datos_previos=datos_persona, validacion=validacion_no_vacia)
+    nombre_completo = Fore.WHITE + Style.BRIGHT + f"Nombre: {name} {surname}\n" + Style.RESET_ALL
+    datos_persona += nombre_completo
 
-        email = pregunta_estilizada('Si no indicas email se va a introducir: ' + name.lower() + surname.lower() + '@gmail.com' + '\nCorreo: ', datos_persona)
-        if not email:
-            email = f'{name.lower()}.{surname.lower()}@gmail.com'
-        datos_persona += Fore.WHITE + Style.BRIGHT + f"Correo: {email}\n" + Style.RESET_ALL
+    email = pregunta_estilizada('Si no indicas email se va a introducir: ' + name.lower() + surname.lower() + '@gmail.com' + '\nCorreo: ', datos_persona)
+    if not email:
+        email = f'{name.lower()}.{surname.lower()}@gmail.com'
+    datos_persona += Fore.WHITE + Style.BRIGHT + f"Correo: {email}\n" + Style.RESET_ALL
 
     # Después de recopilar toda la información, puedes mostrar datos_persona
     clear_console()

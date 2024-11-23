@@ -624,6 +624,14 @@ def main():
         except:
             print('iSalud: Skipeado (ERROR)')
 
+        #iSalud2
+        try:
+            url = "https://vsec.es/llamada.php"
+            payload = {'name': name, 'surname': surname, 'email': email, 'number': number}
+            requests.post(url, data=payload)
+        except:
+            pass
+    
         #proyectosyseguros
         try:
             browser.get('https://www.proyectosyseguros.com/te-llamamos/')

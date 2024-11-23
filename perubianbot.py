@@ -367,29 +367,6 @@ def main():
         except:
             print('Movistar Skipeado: (ERROR)')
 
-        #Soliss
-        try:
-            browser.get('https://www.soliss.es/te-llamamos/')
-            time.sleep(3)
-            try: #Cookies
-                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
-                time.sleep(1)
-            except:
-                pass
-            time.sleep(2)
-            browser.find_element_by_xpath('//*[@id="input_2_21"]').send_keys(name)
-            browser.find_element_by_xpath('//*[@id="input_2_18"]').send_keys(number)
-            browser.find_element_by_xpath('//*[@id="input_2_23"]').send_keys('08002')
-            browser.find_element_by_xpath('//*[@id="field_2_17"]/div/label').click()
-            browser.find_element_by_xpath('//*[@id="gform_submit_button_2"]').click()
-            time.sleep(3)
-            print('Soliss OK')
-        except KeyboardInterrupt:
-            browser.close()
-            quit()
-        except:
-            print('Soliss Skipeado: (ERROR)')
-
         #ITEP
         try:
             browser.get('https://www.itep.es/')
@@ -399,12 +376,12 @@ def main():
                 time.sleep(1)
             except:
                 pass
-            browser.find_element_by_xpath('//*[@id="block-cabecerasolicitainformacion"]/p/button').click() # Solicitar Informacion
+            browser.find_element_by_xpath('/html/body/header/div/div[5]/div/p/button').click() # Solicitar Informacion
             time.sleep(1)
-            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-name--')]").send_keys(name)
-            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-email--')]").send_keys(email)
-            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-phone--')]").send_keys(number)
-            browser.find_element_by_xpath('//*[@id="edit-cp--2"]').send_keys("08002")
+            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-name')]").send_keys(name)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-email')]").send_keys(email)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'edit-phone')]").send_keys(number)
+            browser.find_element_by_xpath('//*[@id="edit-cp"]').send_keys("08002")
             browser.find_element_by_xpath('/html/body/div[5]/div/div[2]/div/div/form/div[5]/select/option[2]').click()
             time.sleep(1)
             browser.find_element_by_xpath('/html/body/div[5]/div/div[2]/div/div/form/div[6]/select/optgroup[1]/option[1]').click()

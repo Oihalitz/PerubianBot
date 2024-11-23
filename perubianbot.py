@@ -12,11 +12,18 @@ import sys
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 import time
 import os
+import argparse
 from os import system
 
 version = '2.1.1'
 global debug
-debug = 0
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--debug', action='store_true', help="Habilitar el modo debug")
+# Leer los argumentos
+args = parser.parse_args()
+debug = int(args.debug)
+
 
 system("title " 'PerubianBot v'+version)
 
@@ -120,7 +127,10 @@ def formulario():
     # Después de recopilar toda la información, puedes mostrar datos_persona
     clear_console()
     print(perubian)
-    print(datos_persona)
+    if debug == 0:
+        print(datos_persona)
+    else:
+        print('DEBUG MODE ON')
 
 interrupted = False
 

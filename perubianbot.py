@@ -1,9 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
 import warnings
 import requests
-import json
 from colorama import Fore, Style
 from consolemenu import *
 from consolemenu.items import *
@@ -15,7 +16,7 @@ import os
 import argparse
 from os import system
 
-version = '2.1.1'
+version = '2.2 Beta'
 global debug
 
 parser = argparse.ArgumentParser()
@@ -29,21 +30,22 @@ system("title " 'PerubianBot v'+version)
 
 global perubian
 perubian = Fore.MAGENTA + Style.BRIGHT + r"""
-  _____                _     _               ___   __ 
- |  __ \              | |   (_)             |__ \ /_ |
- | |__) |__ _ __ _   _| |__  _  __ _ _ __      ) | | |
- |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \    / /  | |
- | |  |  __/ |  | |_| | |_) | | (_| | | | |  / /_ _| |
- |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)_|
+  _____                _     _               ___    ___  
+ |  __ \              | |   (_)             |__ \  |__ \ 
+ | |__) |__ _ __ _   _| |__  _  __ _ _ __      ) |    ) |
+ |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \    / /    / / 
+ | |  |  __/ |  | |_| | |_) | | (_| | | | |  / /_ _ / /_ 
+ |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)____|
 """ + Style.RESET_ALL
 
 menu = ConsoleMenu(Fore.YELLOW + perubian, "Seleccione un modo"+ Style.RESET_ALL)
 
-def firefoxsetup():
+def setup_browser():
     global binary, profile, PATH_TO_DEV_NULL
+    global browser
 
     if os.name == 'nt':  # Windows
-        binary = r'C:\Program Files\Mozilla Firefox\firefox.exe'
+        firefox_binary = r'C:\Program Files\Mozilla Firefox\firefox.exe'
         PATH_TO_DEV_NULL = 'nul'
     elif os.uname().sysname == 'Darwin':  # macOS
         binary = '/Applications/Firefox.app/Contents/MacOS/firefox'
@@ -52,17 +54,30 @@ def firefoxsetup():
         binary = '/usr/bin/firefox'
         PATH_TO_DEV_NULL = '/dev/null'
 
-    # Comprobar si el binario de Firefox existe
-    if not os.path.exists(binary):
-        print("Error: Firefox no está instalado.")
-        time.sleep(5)
-        sys.exit(1)
+    # Comprobar si Firefox está instalado
+    if os.path.exists(firefox_binary):
+        PATH_TO_DEV_NULL = 'nul' if os.name == 'nt' else '/dev/null'
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("media.autoplay.default", 0)
+        profile.accept_untrusted_certs = True
+        profile.set_preference("media.volume_scale", "0.0")
+        profile.set_preference("dom.webnotifications.enabled", False)
 
-    profile = webdriver.FirefoxProfile()
-    profile.set_preference("media.autoplay.default", 0)
-    profile.accept_untrusted_certs = True
-    profile.set_preference("media.volume_scale", "0.0")
-    profile.set_preference("dom.webnotifications.enabled", False)
+        if getattr(sys, 'frozen', False):
+            geckodriver_path = os.path.join(sys._MEIPASS, 'geckodriver')
+        else:
+            geckodriver_path = 'geckodriver'
+        browser = webdriver.Firefox(firefox_binary=firefox_binary, executable_path=geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
+
+    # Configurar para Chrome si Firefox no está disponible
+    else: 
+        print("Firefox no está instalado, usando Chrome...")
+        chrome_service = ChromeService(ChromeDriverManager().install())
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--log-level=3')
+        chrome_options.add_argument('--disable-logging')
+        chrome_options.add_argument('--silent')
+        browser = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 #Limpiar Consola
 def clear_console():
@@ -153,13 +168,7 @@ def main():
         
     global interrupted
     while not interrupted:
-        firefoxsetup()
-        global browser
-        if getattr(sys, 'frozen', False):
-            geckodriver_path = os.path.join(sys._MEIPASS, 'geckodriver')
-        else:
-            geckodriver_path = 'geckodriver'
-        browser = webdriver.Firefox(firefox_binary=binary, executable_path = geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
+        setup_browser()
 
         #SECURITAS DIRECT
         try:

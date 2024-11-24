@@ -172,7 +172,7 @@ def main():
     start = '10:40:00'
     end = '22:00:00'
 
-    if args.start:
+    if args.start or debug:
         repeat = 0
     else:
         repeat = input('Modo repetición [S/N]: ').lower()
@@ -204,7 +204,7 @@ def main():
 
         #euroinnova
         try:
-            browser.get('https://www.euroinnova.edu.es/cursos#formulario')
+            browser.get('https://www.euroinnova.com/')
             time.sleep(3)
             try: #Cookies
                 browser.find_element_by_xpath('//*[@id="accept-cookies"]').click()
@@ -216,7 +216,7 @@ def main():
             browser.find_element_by_xpath('//*[@id="name"]').send_keys(name)
             browser.find_element_by_xpath('//*[@id="mail"]').send_keys(email)
             browser.find_element_by_xpath('//*[@id="tel"]').send_keys(number)
-            browser.find_element_by_xpath('/html/body/div[9]/div/div/div[3]/form/div[3]/div[2]/div/select/option[10]').click()
+            browser.find_element_by_xpath('/html/body/div[7]/div/div/div[3]/form/div[3]/div[2]/div/select/option[10]').click()
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="privacidad"]').click()
             time.sleep(1)
@@ -327,13 +327,39 @@ def main():
             browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[2]/label/span/input').send_keys(number)
             browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[3]/label/span/span/span/input').click()
             browser.find_element_by_xpath('/html/body/div[1]/div/div/article/div/div/div/div[2]/div[2]/div/form/p[4]/input').click()
-            time.sleep(2)
+            time.sleep(5)
             print('spamovil: OK')
         except KeyboardInterrupt:
             browser.close()
             quit()
         except:
             print('spamovil: Skipeado (ERROR)')
+
+        #Vodafone
+        try:
+            browser.get('https://www.vodafone.es/c/empresas/es/marketing-online/')
+            time.sleep(1)
+            try: #Cookies
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+                time.sleep(2)
+            except:
+                pass
+            browser.find_element_by_xpath('/html/body/div[2]/main/div[1]/div/div[2]/div/div/div/section/div/div/div/div/div/a[1]/span[1]').click()
+            time.sleep(2)
+            browser.find_element_by_xpath('//*[@id="phone"]').send_keys(number)
+            checkbox_gdpr = browser.find_element_by_xpath('//*[@id="cmb-gdpr"]')
+            browser.execute_script("arguments[0].click();", checkbox_gdpr)
+            checkbox_commercial = browser.find_element_by_xpath('//*[@id="cmb-check"]')
+            browser.execute_script("arguments[0].click();", checkbox_commercial)
+            time.sleep(1)
+            browser.find_element_by_xpath('/html/body/div[2]/main/div[13]/div/div/div/span/div/div/div/div[2]/div[1]/div/div/form/input[2]').click()
+            time.sleep(4)
+            print('Vodafone: OK')
+        except KeyboardInterrupt:
+            browser.close()
+            quit()
+        except:
+            print('Vodafone: Skipeado (ERROR)')
 
         #Euskaltel
         try:
@@ -488,7 +514,7 @@ def main():
         #LineaDirecta
         try:
             browser.get('https://www.lineadirecta.com/te-llamamos-gratis.html?idServicio=http0036&from=B009975&indVehiculo=C')
-            time.sleep(3)
+            time.sleep(4)
             try: #Cookies
                 browser.find_element_by_xpath('//button[@id="didomi-notice-agree-button"]').click()
             except:

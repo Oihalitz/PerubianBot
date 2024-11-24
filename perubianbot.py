@@ -21,9 +21,13 @@ global debug
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--debug', action='store_true', help="Habilitar el modo debug")
+parser.add_argument('--headless', action='store_true', help="Ejecutar en modo headless")
+parser.add_argument('--start', nargs=4, metavar=('nombre', 'apellido', 'telefono', 'email'),
+                    help="Iniciar el programa con datos: nombre apellido telefono email")
 # Leer los argumentos
 args = parser.parse_args()
 debug = int(args.debug)
+headless = int(args.headless)
 
 
 system("title " 'PerubianBot v'+version)
@@ -67,8 +71,14 @@ def setup_browser():
             geckodriver_path = os.path.join(sys._MEIPASS, 'geckodriver')
         else:
             geckodriver_path = 'geckodriver'
-        browser = webdriver.Firefox(firefox_binary=firefox_binary, executable_path=geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
-
+        
+        if headless:
+            options = webdriver.FirefoxOptions()
+            options.headless = True
+            browser = webdriver.Firefox(firefox_binary=firefox_binary, executable_path=geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL, options=options)
+        else:
+            browser = webdriver.Firefox(firefox_binary=firefox_binary, executable_path=geckodriver_path, firefox_profile=profile, service_log_path=PATH_TO_DEV_NULL)
+    
     # Configurar para Chrome si Firefox no está disponible
     else: 
         print("Firefox no está instalado, usando Chrome...")
@@ -120,7 +130,7 @@ def formulario():
     if debug == 1:
         print(perubian)
         print('DEBUG MODE ON')
-        global number, name, surname
+        global number, name, surname, email
         number, name, surname, email = '666666666', 'NombrePrueba', 'ApellidoPrueba', 'CorreoPrueba@gmail.com'
     else:
         datos_persona = ''
@@ -162,9 +172,12 @@ def main():
     start = '10:40:00'
     end = '22:00:00'
 
-    repeat = input('Modo repetición [S/N]: ').lower()
-    if repeat in ('y', 'yes', 's', 'si'):
-        repeat = 1
+    if args.start:
+        repeat = 0
+    else:
+        repeat = input('Modo repetición [S/N]: ').lower()
+        if repeat in ('y', 'yes', 's', 'si'):
+            repeat = 1
         
     global interrupted
     while not interrupted:
@@ -982,8 +995,15 @@ def main():
             browser.close()
             print('Repeat ON')
         else:
-            browser.quit()
-            break
+            if args.start:
+                try:
+                    browser.close()
+                except:
+                    pass
+                sys.exit()
+            else:
+                browser.quit()
+                break
 
 #Menu
 def modo_automatico():
@@ -1015,6 +1035,10 @@ menu.append_item(item2)
 menu.append_item(item3)
 menu.append_item(submenu_item)
 
+if args.start:
+    global number, name, surname, email
+    name, surname, number, email = args.start
+    main()
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, lambda sig, frame: handle_interrupt(browser))

@@ -295,7 +295,7 @@ def main():
         #Ford
         try:
             browser.get('https://www.infoford.es/c2c/iframe/flotas/ford-pro-expert/')
-            time.sleep(1)
+            time.sleep(4)
             try: #Cookies
                 browser.find_element_by_xpath('//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]').click()
                 time.sleep(2)
@@ -402,9 +402,9 @@ def main():
         #ITEP
         try:
             browser.get('https://www.itep.es/')
-            time.sleep(3)
+            time.sleep(4)
             try: #Cookies
-                browser.find_element_by_xpath('/html/body/div[1]/div/div[6]/button[1]').click()
+                browser.find_element_by_xpath('//*[@id="cookiesjsr"]/div/div/div[2]/button[3]').click()
                 time.sleep(1)
             except:
                 pass
@@ -648,11 +648,33 @@ def main():
 
         #iSalud2
         try:
-            url = "https://vsec.es/llamada.php"
             payload = {'name': name, 'surname': surname, 'email': email, 'number': number}
-            requests.post(url, data=payload)
+            requests.post('https://vsec.es/llamada.php', data=payload)
         except:
             pass
+
+        #Recordador
+        try:
+            payload = {'phoneNumber': '34'+number}
+            files=[]
+            headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0',
+            'Accept': '*/*',
+            'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Referer': 'https://recordador.com/',
+            'Origin': 'https://recordador.com',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'cross-site',
+            'Priority': 'u=0',
+            'Cookie': 'ci_connect_pabbly_sesion=deehc3mngn2kmr42jkt5aotfcdmab2f1'}
+            response = requests.request("POST", 'https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjUwNTY5MDYzNTA0M2M1MjZmNTUzNTUxMzci_pc', headers=headers, data=payload, files=files)
+            if response.status_code == 200:
+                print('Recordador: OK')
+        except:
+            print('Recordador (ERROR)')
     
         #proyectosyseguros
         try:

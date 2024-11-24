@@ -6,19 +6,19 @@ El PerubianBot es un programa que te permite introducir un número de teléfono 
 
 ### Descargar para Windows:
 > [!NOTE]
-> <b>**Se requiere tener instalado el navegador Firefox. <a href="https://www.mozilla.org/es-ES/firefox/download/thanks/">Si no lo tienes instalado puedes descargarlo aquí</a>.**</b><br>
+> <b>**Se requiere tener instalado el navegador Firefox o Chrome. <a href="https://www.mozilla.org/es-ES/firefox/download/thanks/">Si no lo tienes instalado puedes descargarlo aquí</a>.**</b><br>
 > Si eres de esa gente que no quiere hacer nada con el código fuente y no encuentra el link de descarga, no te preocupes, el PerubianBot está adaptado para discapacitados tecnológicos.<br>
 > <a href=https://github.com/Oihalitz/PerubianBot/releases>Aqui os dejamos el link DIRECTO de descarga (1LINK github gratis no fake sin publi) </a>
 
 ### Funcionalidades:
-- [x] <b>Modo automático</b> [FUNCIONAL BETA]: Llamadas comerciales 24 horas continuas. Para una mejor experiencia, se recomienda usar este modo de manera principal, y el resto como complementarios.
+- [x] <b>Modo automático</b>: Llamadas comerciales 24 horas continuas. Para una mejor experiencia, se recomienda usar este modo de manera principal, y el resto como complementarios.
 - [ ] <b>Modo porculero</b> (Próximamente): Modo llamada inmediata (Recibirá llamada al instante, pero puede ser menos molesto a largo plazo que otros, se recomiendo su uso combinado con otras opciones)
 - [ ] <b>Modo nocturno</b> (Próximamente): Modo especial con aquellas empresas que llaman por la noche. No se recomienda su uso durante el día, pero por la noche asegura una información comercial muy completa.
 - [ ] <b>Modo contrareembolso</b> (Próximamente): Para aquellos más aventureros se garantiza que petará el buzón de toda la información comercial que recibirás en tu casa. ¿Cuál será la mejor tarifa?. Alarmas, Telefonía, Luz, Gas... ¡ELIGE TU AVENTURA!
 
 ### Dependencias:
-- <a href="https://github.com/mozilla/geckodriver/releases">Firefox</a>
-- <a href="https://github.com/mozilla/geckodriver/releases">GeckoDriver</a>
+- <a href="https://www.mozilla.org/es-ES/firefox/new/">Firefox</a> o <a href="https://www.google.com/intl/es_es/chrome/">Chrome</a>
+- <a href="https://github.com/mozilla/geckodriver/releases">GeckoDriver</a> o <a href="https://developer.chrome.com/docs/chromedriver">ChromeDriver</a>
 - selenium
 - requests
 - colorama

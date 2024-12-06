@@ -52,10 +52,10 @@ def setup_browser():
         firefox_binary = r'C:\Program Files\Mozilla Firefox\firefox.exe'
         PATH_TO_DEV_NULL = 'nul'
     elif os.uname().sysname == 'Darwin':  # macOS
-        binary = '/Applications/Firefox.app/Contents/MacOS/firefox'
+        firefox_binary = '/Applications/Firefox.app/Contents/MacOS/firefox'
         PATH_TO_DEV_NULL = '/dev/null'
     else:
-        binary = '/usr/bin/firefox'
+        firefox_binary = '/usr/bin/firefox'
         PATH_TO_DEV_NULL = '/dev/null'
 
     # Comprobar si Firefox está instalado
@@ -70,7 +70,7 @@ def setup_browser():
         if getattr(sys, 'frozen', False):
             geckodriver_path = os.path.join(sys._MEIPASS, 'geckodriver')
         else:
-            geckodriver_path = 'geckodriver'
+            geckodriver_path = './geckodriver'
         
         if headless:
             options = webdriver.FirefoxOptions()

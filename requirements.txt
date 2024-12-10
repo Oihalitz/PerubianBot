@@ -3,3 +3,4 @@ console_menu==0.8.0
 requests
 selenium==4.2
 webdriver_manager
+Unidecode

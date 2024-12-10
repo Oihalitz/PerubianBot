@@ -14,6 +14,8 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 import time
 import os
 import argparse
+from unidecode import unidecode
+import re
 from os import system
 
 version = '2.2 Beta'
@@ -133,6 +135,13 @@ def formulario():
         global number, name, surname, email
         number, name, surname, email = '666666666', 'NombrePrueba', 'ApellidoPrueba', 'CorreoPrueba@gmail.com'
     else:
+        def normalizar_cadena(cadena):
+            # Quitar tildes y caracteres especiales
+            cadena = unidecode(cadena)
+            # Eliminar cualquier carácter que no sea alfanumérico
+            cadena = re.sub(r'[^a-zA-Z0-9]', '', cadena)
+            return cadena
+
         datos_persona = ''
         number = pregunta_estilizada('Nº de Teléfono: ')
         while len(number) != 9 or not number.isdigit() or number[0] not in prefijos:
@@ -144,9 +153,13 @@ def formulario():
         nombre_completo = Fore.WHITE + Style.BRIGHT + f"Nombre: {name} {surname}\n" + Style.RESET_ALL
         datos_persona += nombre_completo
 
-        email = pregunta_estilizada('Si no indicas email se va a introducir: ' + name.lower() + surname.lower() + '@gmail.com' + '\nCorreo: ', datos_persona)
+        # Normalizar el nombre y apellido
+        name = normalizar_cadena(name.lower())
+        surname = normalizar_cadena(surname.lower())
+
+        email = pregunta_estilizada('Si no indicas email se va a introducir: ' + name + surname + '@gmail.com' + '\nCorreo: ', datos_persona)
         if not email:
-            email = f'{name.lower()}.{surname.lower()}@gmail.com'
+            email = f'{name}.{surname}@gmail.com'
         datos_persona += Fore.WHITE + Style.BRIGHT + f"Correo: {email}\n" + Style.RESET_ALL
 
     # Después de recopilar toda la información, puedes mostrar datos_persona
@@ -306,7 +319,7 @@ def main():
             browser.find_element_by_xpath('//*[@id="legales"]').click()
             time.sleep(1)
             browser.find_element_by_xpath('//*[@id="btn-enviar"]').click()
-            time.sleep(2)
+            time.sleep(5)
             print('Ford: OK')
         except KeyboardInterrupt:
             browser.close()
@@ -386,7 +399,7 @@ def main():
             browser.get('https://www.pelayo.com/nosotros_te_llamamos/tellamamos')
             time.sleep(2)
             try: #Cookies
-                browser.find_element_by_xpath('//*[@id="cookiesBlockContent"]/div/div/a[1]').click()
+                browser.find_element_by_xpath('/html/body/app-root/app-cookies-block/div[2]/div/div/a[1]').click()
                 time.sleep(3)
             except:
                 pass
@@ -424,6 +437,53 @@ def main():
             quit()
         except:
             print('Movistar Skipeado: (ERROR)')
+
+        #Santalucia
+        try:
+            browser.get('https://seguro.santalucia.es/?utm_source=bing_santalucia_lbm_paid-search_bing_generica_multiramo_otros_na-site-section_na-ad-size_na-served-type_na-princing&msclkid=dac0ba5685891c9f6da6dd0efc479885')
+            time.sleep(6)
+            try: #Cookies
+                browser.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]').click()
+                time.sleep(1)
+            except:
+                pass
+            time.sleep(1)
+            browser.find_element_by_xpath('//*[@id="landings_ty_form115200807"]/div[1]/div/div[1]').click()
+            time.sleep(2)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'phone')]").send_keys(number)
+            time.sleep(1)
+            browser.find_element_by_xpath("//*[starts-with(@id, 'checkProteccion')]").click()
+            browser.find_element_by_xpath("//*[starts-with(@id, 'checkInformation')]").click()
+            browser.find_element_by_xpath('//*[@id="landings_ty_form115200807"]/input').click()
+            time.sleep(2)
+            print('SantaLucia OK')
+        except KeyboardInterrupt:
+            browser.close()
+            quit()
+        except:
+            print('SantaLucia Skipeado: (ERROR)')
+
+        #Asisa
+        try:
+            browser.get('https://asisa.contratarsegurodesalud.com/seguro-salud-pyme')
+            time.sleep(5)
+            try: #Cookies
+                browser.find_element_by_xpath('/html/body/div[1]/div/div[4]/div/div[2]/button[4]').click()
+                time.sleep(1)
+            except:
+                pass
+            time.sleep(1)
+            browser.find_element_by_xpath('//*[@id=":R2kla2l6:"]').send_keys(number)
+            time.sleep(1)
+            browser.find_element_by_xpath('/html/body/div/div/div[2]/div/div[3]/label/span[1]/input').click()
+            browser.find_element_by_xpath('/html/body/div/div/div[2]/div/div[4]/button/p').click()
+            time.sleep(2)
+            print('Asisa OK')
+        except KeyboardInterrupt:
+            browser.close()
+            quit()
+        except:
+            print('Asisa Skipeado: (ERROR)')
 
         #ITEP
         try:
@@ -519,14 +579,9 @@ def main():
                 browser.find_element_by_xpath('//button[@id="didomi-notice-agree-button"]').click()
             except:
                 pass
-            browser.find_element_by_xpath('//*[@id="telefonoC2c"]').send_keys(number)
-            try:
-                browser.find_element_by_xpath('/html/body/div[1]/div/section/div[2]/div[2]/div/form/div[4]/div/div[1]/select/option[2]').click()
-                browser.find_element_by_xpath('/html/body/div[1]/div/section/div[2]/div[2]/div/form/div[4]/div/div[2]/select/option[2]').click()
-            except:
-                pass
+            browser.find_element_by_xpath('//*[@id="telefono-numerico"]').send_keys(number)
             time.sleep(1)
-            browser.find_element_by_xpath('/html/body/div/div/section/div[2]/div[2]/div/form/div[5]/a').click() # Buttom 1
+            browser.find_element_by_xpath('//*[@id="btn1"]').click() # Buttom 1
             time.sleep(2)
             print('Linea Directa: OK')
         except KeyboardInterrupt:
@@ -563,6 +618,7 @@ def main():
             browser.find_element_by_xpath('//*[@id="primer_apellido"]').send_keys(surname)
             browser.find_element_by_xpath('//*[@id="codigo_postal"]').send_keys("08002")
             browser.find_element_by_xpath('//*[@id="tlfn"]').send_keys(number)
+            browser.find_element_by_xpath('//*[@id="marca_robinson"]').click()
             browser.find_element_by_xpath('//*[@id="politicaprivacidad"]').click()
             browser.find_element_by_xpath('/html/body/div[1]/main/div/div/div[2]/form/fieldset/div[10]/input').click()
             time.sleep(3)

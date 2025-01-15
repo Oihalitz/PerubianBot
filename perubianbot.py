@@ -1135,7 +1135,7 @@ def main():
 #Menu
 def modo_automatico():
     print('Activando Modo automatico...')
-    time.sleep(1)
+    time.sleep(0.5)
     formulario()
     main()
 
@@ -1148,7 +1148,10 @@ def modo_nocturno():
     time.sleep(2)
 
 
-submenu_selection_menu = SelectionMenu(["subitem1", "subitem2", "subitem3"], title="Modo Contrareembolso")
+submenu_selection_menu = SelectionMenu(
+    ["En construcción", "En construcción"],
+    title="Modo Contrareembolso",
+    exit_option_text="Volver al menu princiipal")
 submenu_item = SubmenuItem("Modo Contrareembolso", submenu=submenu_selection_menu, menu=menu)
 
 # Crear los ítems del menú

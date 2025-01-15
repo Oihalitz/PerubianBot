@@ -18,7 +18,7 @@ from unidecode import unidecode
 import re
 from os import system
 
-version = '2.4 BETA'
+version = '2.3 BETA'
 global debug
 
 parser = argparse.ArgumentParser()

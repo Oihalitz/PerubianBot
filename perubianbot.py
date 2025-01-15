@@ -18,7 +18,7 @@ from unidecode import unidecode
 import re
 from os import system
 
-version = '2.2'
+version = '2.4 BETA'
 global debug
 
 parser = argparse.ArgumentParser()
@@ -31,20 +31,43 @@ args = parser.parse_args()
 debug = int(args.debug)
 headless = int(args.headless)
 
-
-system("title " 'PerubianBot v'+version)
+if os.name == 'nt':
+    system("title " 'PerubianBot v'+version)
+else:
+    system("echo -e '\033]2;PerubianBot v"+version+"\007'")
 
 global perubian
 perubian = Fore.MAGENTA + Style.BRIGHT + r"""
-  _____                _     _               ___    ___  
- |  __ \              | |   (_)             |__ \  |__ \ 
- | |__) |__ _ __ _   _| |__  _  __ _ _ __      ) |    ) |
- |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \    / /    / / 
- | |  |  __/ |  | |_| | |_) | | (_| | | | |  / /_ _ / /_ 
- |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)____|
+  _____                _     _               ___    ____  
+ |  __ \              | |   (_)             |__ \  |___ \ 
+ | |__) |__ _ __ _   _| |__  _  __ _ _ __      ) |   __) |
+ |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \    / /   |__ < 
+ | |  |  __/ |  | |_| | |_) | | (_| | | | |  / /_ _ ___) |
+ |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)____/ 
 """ + Style.RESET_ALL
 
-menu = ConsoleMenu(Fore.YELLOW + perubian, "Seleccione un modo"+ Style.RESET_ALL)
+def check_version():
+    try:
+        current_version_num = version.split(" ")[0]
+
+        gist_url = "https://gist.githubusercontent.com/Oihalitz/06b39df2b15439c8aa0c6419e5565341/raw/versionperubian.json"
+
+        response = requests.get(gist_url)
+        response.raise_for_status()
+        latest_version = response.json().get("latest_version")
+
+        if not latest_version:
+            return "No se pudo obtener la versión más reciente."
+
+        if current_version_num < latest_version:
+            return f"¡Nueva versión disponible! (Actual: {version}, Nueva: {latest_version})"
+        else:
+            return ""
+    except requests.exceptions.RequestException as e:
+        return f"Error al comprobar la versión: {e}"
+
+menu = ConsoleMenu(Fore.YELLOW + perubian + check_version(), "Seleccione un modo" + Style.RESET_ALL)
+
 
 def setup_browser():
     global binary, profile, PATH_TO_DEV_NULL

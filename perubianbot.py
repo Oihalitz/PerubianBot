@@ -13,6 +13,9 @@ import signal
 import argparse
 import requests
 import re
+import importlib.util
+import hashlib
+import json
 from datetime import datetime
 from colorama import Fore, Style
 from consolemenu import ConsoleMenu
@@ -28,6 +31,11 @@ import webs
 # ============= CONFIGURACIÓN =============
 VERSION = '3.0'
 GIST_VERSION_URL = "https://gist.githubusercontent.com/Oihalitz/06b39df2b15439c8aa0c6419e5565341/raw/versionperubian.json"
+UPDATE_WEBS_URL = "https://raw.githubusercontent.com/Oihalitz/PerubianBot/refs/heads/main/webs.py"
+CACHE_DIR = os.path.join(os.path.expanduser("~"), ".perubianbot")
+CACHE_WEBS_PATH = os.path.join(CACHE_DIR, "webs_cache.py")
+CACHE_WEBS_HASH_PATH = os.path.join(CACHE_DIR, "webs_hash.json")
+HASH_CACHE_TTL_SECONDS = 12 * 60 * 60
 
 PERUBIAN_BANNER = Fore.MAGENTA + Style.BRIGHT + r"""
   _____                _     _               ____      ___  
@@ -230,7 +238,7 @@ def configurar_titulo_terminal():
     if os.name == 'nt':
         os.system(f"title PerubianBot v{VERSION}")
     else:
-        os.system(f"echo -e '\\033]2;PerubianBot v{VERSION}\\007'")
+        os.system(f"printf '\033]2;PerubianBot v{VERSION}\007'")
 
 
 def verificar_version():
@@ -240,16 +248,100 @@ def verificar_version():
         response = requests.get(GIST_VERSION_URL, timeout=5)
         response.raise_for_status()
         latest_version = response.json().get("latest_version")
-        
+
         if not latest_version:
-            return ""
-        
+            return "", None
+
         if current_version_num < latest_version:
-            return f"¡Nueva versión disponible! (Actual: {VERSION}, Nueva: {latest_version})"
-        else:
-            return ""
+            return (
+                f"¡Nueva version del programa disponible! (Actual: {VERSION}, Nueva: {latest_version})",
+                latest_version,
+            )
+        return "", None
     except:
-        return ""
+        return "", None
+
+
+def calcular_hash_contenido(contenido):
+    """Devuelve hash SHA256 del contenido"""
+    return hashlib.sha256(contenido).hexdigest()
+
+
+def obtener_hash_archivo(path):
+    """Calcula hash SHA256 de un archivo local"""
+    with open(path, "rb") as f:
+        return calcular_hash_contenido(f.read())
+
+
+def obtener_hash_webs_remoto():
+    """Calcula hash SHA256 del webs.py remoto"""
+    response = requests.get(UPDATE_WEBS_URL, timeout=10)
+    response.raise_for_status()
+    if not response.content:
+        raise ValueError("Contenido vacio")
+    return calcular_hash_contenido(response.content)
+
+
+def cargar_hash_remoto_cache():
+    """Carga hash remoto cacheado si no esta expirado"""
+    try:
+        if not os.path.isfile(CACHE_WEBS_HASH_PATH):
+            return None
+        with open(CACHE_WEBS_HASH_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        ts = int(data.get("timestamp", 0))
+        hash_value = data.get("hash")
+        if not hash_value:
+            return None
+        if time.time() - ts > HASH_CACHE_TTL_SECONDS:
+            return None
+        return hash_value
+    except:
+        return None
+
+
+def guardar_hash_remoto_cache(hash_value):
+    """Guarda hash remoto en cache con timestamp"""
+    try:
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        with open(CACHE_WEBS_HASH_PATH, "w", encoding="utf-8") as f:
+            json.dump({"hash": hash_value, "timestamp": int(time.time())}, f)
+    except:
+        pass
+
+
+def obtener_hash_webs_remoto_con_cache():
+    """Obtiene hash remoto usando cache para evitar pedirlo siempre"""
+    hash_value = cargar_hash_remoto_cache()
+    if hash_value:
+        return hash_value
+    hash_value = obtener_hash_webs_remoto()
+    guardar_hash_remoto_cache(hash_value)
+    return hash_value
+
+
+def obtener_ruta_webs_local():
+    """Prioriza el webs.py del proyecto si existe"""
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    candidate = os.path.join(base_dir, "webs.py")
+    if os.path.isfile(candidate):
+        return candidate
+    return getattr(webs, "__file__", None)
+
+
+def verificar_webs_actualizacion():
+    """Compara hash local vs remoto de webs.py"""
+    try:
+        local_path = obtener_ruta_webs_local()
+        if not local_path or not os.path.isfile(local_path):
+            return "", False
+        local_hash = obtener_hash_archivo(local_path)
+        remote_hash = obtener_hash_webs_remoto_con_cache()
+        if local_hash != remote_hash:
+            return "¡Nueva version de webs.py disponible!", True
+        return "", False
+    except:
+        return "", False
 
 
 def manejar_interrupcion(sig, frame):
@@ -260,6 +352,38 @@ def manejar_interrupcion(sig, frame):
     cerrar_navegador()
     print("¡Hasta pronto!")
     sys.exit(0)
+
+
+def cargar_webs_cache():
+    """Carga webs.py desde cache local si existe"""
+    global webs
+    try:
+        if not os.path.isfile(CACHE_WEBS_PATH):
+            return False, "No hay cache"
+        spec = importlib.util.spec_from_file_location("webs_cache", CACHE_WEBS_PATH)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        webs = module
+        sys.modules["webs"] = module
+        return True, ""
+    except Exception as e:
+        return False, str(e)
+
+
+def descargar_webs_a_cache():
+    """Descarga webs.py remoto y lo guarda en cache"""
+    try:
+        response = requests.get(UPDATE_WEBS_URL, timeout=10)
+        response.raise_for_status()
+        contenido = response.text
+        if not contenido.strip():
+            return False, "Contenido vacio"
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        with open(CACHE_WEBS_PATH, "w", encoding="utf-8") as f:
+            f.write(contenido)
+        return True, ""
+    except Exception as e:
+        return False, str(e)
 
 
 # ============= FUNCIONES PRINCIPALES =============
@@ -407,9 +531,31 @@ def main():
         sys.exit(0)
     
     # Crear menú
-    version_info = verificar_version()
+    version_info, latest_version = verificar_version()
+    webs_info, webs_update = verificar_webs_actualizacion()
+    if latest_version:
+        print(version_info)
+    if webs_update:
+        print("Hay una nueva version del listado de webs. Desea actualizarlo?")
+        prompt_suffix = ""
+        if latest_version:
+            prompt_suffix = " (NO recomendado: hay nueva actualizacion del programa)"
+        usar_cache = input(f"Descargar y usar webs actualizado en cache? [S/N]{prompt_suffix}: ").strip().lower()
+        if usar_cache in ("s", "si", "y", "yes"):
+            ok, error = descargar_webs_a_cache()
+            if ok:
+                ok_cache, error_cache = cargar_webs_cache()
+                if ok_cache:
+                    print("Usando webs actualizado desde cache.")
+                else:
+                    print(f"No se pudo cargar cache: {error_cache}")
+            else:
+                print(f"No se pudo descargar webs: {error}")
+    banner_text = Fore.YELLOW + PERUBIAN_BANNER
+    if version_info:
+        banner_text += version_info
     menu = ConsoleMenu(
-        Fore.YELLOW + PERUBIAN_BANNER + version_info,
+        banner_text,
         "Seleccione una opción" + Style.RESET_ALL
     )
     

@@ -324,7 +324,7 @@ class Vodafone(WebBase):
         if not self.click_seguro(browser, '/html/body/div[2]/main/div[14]/div/div/div/span/div/div[2]/div[1]/div/div/form/input[2]'):
             return False, "No se pudo enviar"
         
-        time.sleep(4)
+        time.sleep(6)
         return True, "OK"
 
 
@@ -385,25 +385,18 @@ class Pelayo(WebBase):
 
 class Movistar(WebBase):
     def __init__(self):
-        super().__init__("Movistar", "https://www.movistar.es/estaticos/html/modal/modal-formulario-C2C-empresas-inside-sales-new.html")
+        super().__init__("Movistar", "https://www.movistar.es/atencion-cliente/ayuda")
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(1)
-        self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
+        self.aceptar_cookies(browser, '/html/body/div[7]/div/div/div/div/div[2]/div/div/button[2]')
         time.sleep(1)
+        self.click_seguro(browser, '/html/body/div[6]/div/div/div/div/div/div/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div/div[4]/div/div/div[2]/div/div/div/div/button')
+        time.sleep(2)
         
-        self.escribir_seguro(browser, '//*[@id="nameC2CplainModal_IS"]', nombre)
-        self.escribir_seguro(browser, '//*[@id="tlfC2CplainModal_IS"]', telefono)
-        time.sleep(1)
-        self.escribir_seguro(browser, '//*[@id="cifC2CplainModal_IS"]', 'D09818238')
-        try:
-            select_elem = browser.find_element(By.XPATH, '/html/body/div[1]/div/div/div/form/div[1]/div[4]/select')
-            Select(select_elem).select_by_index(32)
-        except:
-            return False, "No se pudo seleccionar la provincia"
-        
-        if not self.click_seguro(browser, '//*[@id="modal__emp__cta"]'):
+        self.escribir_seguro(browser, '/html/body/div[5]/div/div/div/div/div/div/div/div/div[2]/div/div/div/div[2]/form/div[1]/div/div/div/div/div/div/div/div[1]/div/div/div/div/div/div/label/input', telefono)
+        if not self.click_seguro(browser, '/html/body/div[5]/div/div/div/div/div/div/div/div/div[2]/div/div/div/div[2]/form/div[2]/button'):
             return False, "No se pudo enviar"
         
         time.sleep(2)
@@ -438,47 +431,71 @@ class Mapfre(WebBase):
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
-        time.sleep(2)
+        time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
-        
+        time.sleep(1)
+
         self.escribir_seguro(browser, '//*[@id="nombre"]', nombre)
         self.escribir_seguro(browser, '//*[@id="primer_apellido"]', apellido)
         self.escribir_seguro(browser, '//*[@id="codigo_postal"]', "08002")
         self.escribir_seguro(browser, '//*[@id="tlfn"]', telefono)
         self.click_seguro(browser, '//*[@id="marca_robinson"]')
         self.click_seguro(browser, '//*[@id="politicaprivacidad"]')
-        
-        if not self.click_seguro(browser, '/html/body/div[1]/main/div/div/div[2]/form/fieldset/div[10]/input'):
+
+        # Fuera de horario comercial aparece un select para elegir el día de llamada.
+        # Seleccionamos la primera opción válida de cualquier select visible (salvo cboProvincia).
+        try:
+            selects = browser.find_elements(By.TAG_NAME, 'select')
+            for sel in selects:
+                if sel.get_attribute('id') == 'cboProvincia':
+                    continue
+                if not sel.is_displayed():
+                    continue
+                options = [o for o in Select(sel).options if o.get_attribute('value')]
+                if options:
+                    Select(sel).select_by_value(options[0].get_attribute('value'))
+                    time.sleep(0.5)
+        except Exception:
+            pass
+
+        if not self.click_seguro(browser, '//*[@id="SegurosCocheForm"]//input[@type="button"]'):
             return False, "No se pudo enviar"
-        
+
         time.sleep(3)
         return True, "OK"
 
 
 class SantaLucia(WebBase):
     def __init__(self):
-        super().__init__("SantaLucia", "https://seguro.santalucia.es/?utm_source=bing_santalucia_lbm_paid-search_bing_generica_multiramo_otros_na-site-section_na-ad-size_na-served-type_na-princing&msclkid=dac0ba5685891c9f6da6dd0efc479885")
-    
+        super().__init__("SantaLucia", "https://seguro.santalucia.es/")
+
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
-        time.sleep(6)
+        time.sleep(5)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
         time.sleep(1)
-        
-        self.click_seguro(browser, '//*[@id="landings_ty_form115200807"]/div[1]/div/div[1]')
-        time.sleep(2)
-        self.escribir_seguro(browser, "//*[starts-with(@id, 'phone')]", telefono)
-        self.click_seguro(browser, '/html/body/div[1]/div[3]/section/div[1]/div[1]/div/div/div/section/div/div[2]/div/div/div/section/div[1]/div/div[2]/form/div[1]/div/div[2]/label')
+
+        # Seleccionar tipo de seguro (radio obligatorio)
+        self.click_seguro(browser, '//*[@id="hogar"]')
         time.sleep(1)
-        self.click_seguro(browser, "//*[starts-with(@id, 'checkProteccion')]")
-        self.click_seguro(browser, "//*[starts-with(@id, 'checkInformation')]")
-        
-        if not self.click_seguro(browser, '/html/body/div[1]/div[3]/section/div[1]/div[1]/div/div/div/section/div/div[2]/div/div/div/section/div[1]/div/div[2]/form/input'):
+
+        # Campo teléfono
+        if not self.escribir_seguro(browser, '//*[@id="telefonoLanding"]', telefono):
+            return False, "No se pudo introducir el teléfono"
+
+        # Checkbox protección de datos (obligatorio)
+        self.click_seguro(browser, '//*[@id="proteccionDatosLanding"]')
+        # Checkbox info productos (opcional)
+        self.click_seguro(browser, '//*[@id="infoProductoLanding"]')
+        time.sleep(1)
+
+        # Botón enviar
+        if not self.click_seguro(browser, '//*[@id="formLanding"]//button[@type="submit"]'):
             return False, "No se pudo enviar"
 
         for _ in range(10):
             try:
-                if "seguro.santalucia.es/gracias" in browser.current_url:
+                if "gracias" in browser.current_url:
                     return True, "OK"
             except:
                 pass
@@ -495,14 +512,14 @@ class Asisa(WebBase):
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(5)
-        self.aceptar_cookies(browser, '/html/body/div[1]/div/div[4]/div/div[2]/button[4]')
+        self.aceptar_cookies(browser, '//*[@id="CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"]')
         time.sleep(1)
         
         self.escribir_seguro(browser, '//*[@id=":R2kla2l6:"]', telefono)
         time.sleep(1)
-        self.click_seguro(browser, '/html/body/div/div/div[2]/div/div[3]/label/span[1]/input')
+        self.click_seguro(browser, '/html/body/div[3]/div/div[2]/div/div[3]/label/span[1]/input')
         
-        if not self.click_seguro(browser, '/html/body/div/div/div[2]/div/div[4]/button/p'):
+        if not self.click_seguro(browser, '/html/body/div[3]/div/div[2]/div/div[4]/button/p'):
             return False, "No se pudo enviar"
         
         time.sleep(2)
@@ -512,28 +529,35 @@ class Asisa(WebBase):
 class ITEP(WebBase):
     def __init__(self):
         super().__init__("ITEP", "https://www.itep.es/")
-    
+
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(4)
         self.aceptar_cookies(browser, '//*[@id="cookiesjsr"]/div/div/div[2]/button[3]')
-        
-        self.click_seguro(browser, '/html/body/header/div/div[5]/div/p/button')
+
+        # Abrir modal "Solicita información"
+        if not self.click_seguro(browser, '//button[@data-target="header-form-modal"]'):
+            return False, "No se pudo abrir el formulario"
         time.sleep(1)
+
         try:
             modal = browser.find_element(By.ID, 'header-form-modal')
         except:
-            return False, "No se pudo abrir el formulario"
+            return False, "No se encontro el modal"
+
+        # Rellenar campos — buscamos por name para no depender del sufijo dinámico (--2, --4...)
         try:
-            modal.find_element(By.ID, 'edit-name').send_keys(nombre)
-            modal.find_element(By.ID, 'edit-email').send_keys(email)
-            modal.find_element(By.ID, 'edit-phone').send_keys(telefono)
-            modal.find_element(By.ID, 'edit-cp').send_keys("08002")
+            modal.find_element(By.NAME, 'name').send_keys(nombre)
+            modal.find_element(By.NAME, 'email').send_keys(email)
+            modal.find_element(By.NAME, 'phone').send_keys(telefono)
+            modal.find_element(By.NAME, 'cp').send_keys("08002")
         except:
             return False, "No se pudieron rellenar los campos"
+
+        # Ciudad
         try:
-            select_city = modal.find_element(By.ID, 'edit-city')
-            city_options = [opt for opt in Select(select_city).options if opt.get_attribute('value')]
+            select_city = modal.find_element(By.NAME, 'city')
+            city_options = [o for o in Select(select_city).options if o.get_attribute('value')]
             if not city_options:
                 return False, "No se pudo seleccionar la ciudad"
             city_value = random.choice(city_options).get_attribute('value')
@@ -541,40 +565,43 @@ class ITEP(WebBase):
                 "arguments[0].value = arguments[1];"
                 "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
                 "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
-                select_city,
-                city_value
+                select_city, city_value
             )
         except:
             return False, "No se pudo seleccionar la ciudad"
-        time.sleep(1)
+        time.sleep(2)
+
+        # Titulación
         try:
-            select_titulation = modal.find_element(By.ID, 'edit-titulation')
-            titulation_options = [opt for opt in Select(select_titulation).options if opt.get_attribute('value')]
-            if not titulation_options:
+            select_tit = modal.find_element(By.NAME, 'titulation')
+            tit_options = [o for o in Select(select_tit).options if o.get_attribute('value')]
+            if not tit_options:
                 return False, "No se pudo seleccionar la titulacion"
-            titulation_value = random.choice(titulation_options).get_attribute('value')
+            tit_value = random.choice(tit_options).get_attribute('value')
             browser.execute_script(
                 "arguments[0].value = arguments[1];"
                 "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));"
                 "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
-                select_titulation,
-                titulation_value
+                select_tit, tit_value
             )
         except:
             return False, "No se pudo seleccionar la titulacion"
+
+        # Checkbox condiciones
         try:
-            checkbox = modal.find_element(By.ID, 'edit-conditions--2')
+            checkbox = modal.find_element(By.NAME, 'conditions')
             browser.execute_script("arguments[0].click();", checkbox)
         except:
             return False, "No se pudo aceptar condiciones"
         time.sleep(1)
 
+        # Enviar
         try:
-            submit = modal.find_element(By.ID, 'edit-submit-lead-form-header-web-solicita-info-general-1')
+            submit = modal.find_element(By.CSS_SELECTOR, 'input[type="submit"]')
             browser.execute_script("arguments[0].click();", submit)
         except:
             return False, "No se pudo enviar"
-        
+
         time.sleep(3)
         return True, "OK"
 
@@ -582,25 +609,38 @@ class ITEP(WebBase):
 class MasMovilAlarmas(WebBase):
     def __init__(self):
         super().__init__("MasMovil Alarmas", "https://masmovilalarmas.es/")
-    
+
     def ejecutar(self, browser, nombre, apellido, telefono, email):
-        browser.get(self.url)
+        # La página carga un script externo BySide muy pesado que bloquea Selenium.
+        # Limitamos el tiempo de carga para no quedar colgados.
+        browser.set_page_load_timeout(12)
+        try:
+            browser.get(self.url)
+        except Exception:
+            pass
+        finally:
+            browser.set_page_load_timeout(30)
+
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
-        
-        self.click_seguro(browser, '/html/body/div[1]/div/div[2]/main/div/section[1]/div[2]/div[1]/div[2]/div/div[2]/div[1]/a')
-        time.sleep(2)
-        self.escribir_seguro(browser, "//*[starts-with(@id, 'BysidePhoneBySideData_')]", telefono)
-        self.click_seguro(browser, "//*[starts-with(@id, 'BysideCallBtnBySideData_')]")
-        
-        try:
-            self.click_seguro(browser, "/html/body/div[51]/div[1]/div[2]/div/div[1]/div[2]/div[2]/div[1]/input[1]")
-            time.sleep(1)
-        except:
-            pass
-        
+
+        # Botón "LLÁMAME GRATIS" — buscamos por texto para no depender del XPath absoluto
+        if not self.click_seguro(browser, '//button[.//img[@src="/icons/phone-filled-black.svg"]][1]', timeout=2):
+            if not self.click_seguro(browser, '//button[contains(., "LLÁMAME")][1]', timeout=2):
+                return False, "No se pudo abrir el widget de llamada"
+        time.sleep(3)
+
+        if not self.escribir_seguro(browser, "//*[starts-with(@id, 'BysidePhoneBySideData_')]", telefono):
+            return False, "No se pudo introducir el teléfono"
+        if not self.click_seguro(browser, "//*[starts-with(@id, 'BysideCallBtnBySideData_')]"):
+            return False, "No se pudo enviar"
+
+        # Confirmación opcional que puede aparecer
+        self.click_seguro(browser, "//*[starts-with(@id, 'BysideCallBtnBySideData_')]", timeout=2)
+
         time.sleep(2)
         return True, "OK"
+
 
 
 class Prosegur(WebBase):
@@ -636,33 +676,71 @@ class Prosegur(WebBase):
 class LineaDirecta(WebBase):
     def __init__(self):
         super().__init__("Linea Directa", "https://www.lineadirecta.com/te-llamamos-gratis.html?idServicio=http0036&from=B009975&indVehiculo=C")
-    
+
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(4)
         self.aceptar_cookies(browser, '//button[@id="didomi-notice-agree-button"]')
-        
+
         self.escribir_seguro(browser, '//*[@id="telefono-numerico"]', telefono)
         time.sleep(1)
-        
+
+        # Fuera de horario comercial aparecen selectores de fecha y hora (dropdowns custom cargados via AJAX).
+        # Si el selector de fecha es visible, abrimos y elegimos la primera opción.
+        try:
+            date_selector = browser.find_element(By.ID, 'div-selection-select1')
+            if date_selector.is_displayed():
+                browser.execute_script("arguments[0].click();", date_selector)
+                time.sleep(2)
+                # Primera opción de fecha: id="div-option-select10"
+                first_date = browser.find_element(By.ID, 'div-option-select10')
+                browser.execute_script("arguments[0].click();", first_date)
+                time.sleep(2)
+                # Primera opción de hora que se carga tras elegir fecha
+                first_hour = browser.find_element(By.ID, 'div-option-select20')
+                browser.execute_script("arguments[0].click();", first_hour)
+                time.sleep(1)
+        except Exception:
+            pass
+
         if not self.click_seguro(browser, '//*[@id="txtBtn1"]'):
             return False, "No se pudo enviar"
-        
+
         time.sleep(2)
         return True, "OK"
 
 
+
 class Telecable(WebBase):
     def __init__(self):
-        super().__init__("Telecable", "http://marcador-c2c.alisys.net/telecablec2c_v2/c2c.php")
+        super().__init__("Telecable", "https://www.telecable.com/?idioma=esp")
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(3)
+        self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
+        time.sleep(2)
         
-        self.escribir_seguro(browser, '//*[@id="numero"]', telefono)
-        
-        if not self.click_seguro(browser, '/html/body/div[1]/div[3]/form/button'):
+        selectors = [
+            (By.CSS_SELECTOR, '#c2c-form #phone'),
+            (By.XPATH, '//*[@id="c2c-form"]//*[@id="phone"]'),
+            (By.XPATH, '(//*[@id="phone"])[1]')
+        ]
+        if not self.escribir_lento_visible(browser, selectors, telefono, delay=0.2):
+            return False, "No se pudo introducir el teléfono"
+
+        submit_selectors = [
+            (By.CSS_SELECTOR, '#c2c-form #c2c-submit'),
+            (By.XPATH, '//*[@id="c2c-form"]//*[@id="c2c-submit"]'),
+            (By.XPATH, '(//*[@id="c2c-submit"])[1]')
+        ]
+        submit_button = self.encontrar_elemento_visible(browser, submit_selectors)
+        if not submit_button:
+            return False, "No se pudo encontrar el boton de envio"
+        try:
+            browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+            browser.execute_script("arguments[0].click();", submit_button)
+        except:
             return False, "No se pudo enviar"
         
         time.sleep(3)
@@ -671,26 +749,17 @@ class Telecable(WebBase):
 
 class HomeGO(WebBase):
     def __init__(self):
-        super().__init__("HomeGO", "https://homego.es/alarmas-para-casa-precios-no-cliente")
+        super().__init__("HomeGO", "https://yoigoalarmas.es/")
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
         
-        browser.execute_script("window.scrollBy(0, 500);")
-        time.sleep(3)
+        self.escribir_seguro(browser, "//*[starts-with(@id, 'CMPhoneBySideData_')]", telefono)
         
         try:
-            self.click_seguro(browser, "//*[starts-with(@id, 'BysideScheduleBySideData_')]/option[2]")
-        except:
-            pass
-        
-        self.escribir_seguro(browser, "//*[starts-with(@id, 'BysidePhoneBySideData_')]", telefono)
-        self.click_seguro(browser, "//*[starts-with(@id, 'BysideCallBtnBySideData_')]")
-        
-        try:
-            self.click_seguro(browser, "/html/body/div[82]/div[1]/div/div/div/div/div[1]/div[2]/div[1]/input[1]")
+            self.click_seguro(browser, "//*[starts-with(@id, 'CMCallBtnBySideData_')]")
             time.sleep(2)
         except:
             pass
@@ -989,18 +1058,17 @@ class CentroDermatologico(WebBase):
 
 class MutuaMadrilena(WebBase):
     def __init__(self):
-        super().__init__("Mutua Madrileña", "https://www.mutua.es/recursos/html/404.htm")
+        super().__init__("Mutua Madrileña", "https://tellamamos.mutua.es/agr/?agr=agr:acierto:moto:c2c&num_presupuesto=")
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(3)
-        self.aceptar_cookies(browser, '//*[@id="consent_prompt_submit"]')
         
-        self.escribir_seguro(browser, '//*[@id="nombreformC2C2"]', nombre)
-        self.escribir_seguro(browser, '//*[@id="telefonoformC2C2"]', telefono)
-        self.click_seguro(browser, '/html/body/section[1]/div/div[2]/form/div/div/div/div[4]/div[3]/label')
+        self.escribir_seguro(browser, '//*[@id="af_uid_401"]', nombre)
+        self.escribir_seguro(browser, '//*[@id="af_uid_402"]', telefono)
+        self.click_seguro(browser, '//*[@id="call_me_form"]/div[3]/div[1]/div/label')
         
-        if not self.click_seguro(browser, '/html/body/section[1]/div/div[2]/form/div/div/div/div[5]/div/a'):
+        if not self.click_seguro(browser, '//*[@id="call_me_btn"]'):
             return False, "No se pudo enviar"
         
         time.sleep(2)
@@ -1010,55 +1078,50 @@ class MutuaMadrilena(WebBase):
 class Generali(WebBase):
     def __init__(self):
         super().__init__("Generali", "https://www.generali.es/blog/tuasesorsalud/solicitar-informacion/")
-    
+
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
+        time.sleep(1)
 
-        self.escribir_seguro(browser, '//*[@id="Email"]', email)
-        self.escribir_seguro(browser, '//*[@id="FirstName"]', nombre)
-        self.escribir_seguro(browser, '//*[@id="PhoneNumber"]', telefono)
-
+        # El formulario está dentro de un iframe
         try:
-            select_cliente = browser.find_element(By.ID, 'Eres_cliente_de_Generali')
-            Select(select_cliente).select_by_index(2)
+            iframe = browser.find_element(By.ID, 'iframe--solicitar-informacion')
+            browser.switch_to.frame(iframe)
         except:
-            return False, "No se pudo seleccionar cliente"
+            return False, "No se pudo acceder al iframe del formulario"
 
         try:
-            select_seguro = browser.find_element(By.ID, 'Tienes_tu_seguro_de_salud_con_Generali')
-            Select(select_seguro).select_by_index(2)
-        except:
-            return False, "No se pudo seleccionar seguro"
+            self.escribir_seguro(browser, '//*[@id="Email"]', email)
+            self.escribir_seguro(browser, '//*[@id="FirstName"]', nombre)
+            self.escribir_seguro(browser, '//*[@id="PhoneNumber"]', telefono)
 
-        try:
-            select_seguro_actual = browser.find_element(By.ID, 'Que_seguro_tienes_ahora')
-            Select(select_seguro_actual).select_by_index(1)
-        except:
-            return False, "No se pudo seleccionar seguro actual"
+            for sel_id, idx in [
+                ('Eres_cliente_de_Generali', 2),
+                ('Tienes_tu_seguro_de_salud_con_Generali', 2),
+                ('Que_seguro_tienes_ahora', 1),
+                ('Agendar_llamada', 1),
+            ]:
+                el = browser.find_element(By.ID, sel_id)
+                browser.execute_script(
+                    "arguments[0].selectedIndex = arguments[1];"
+                    "arguments[0].dispatchEvent(new Event('change', {bubbles:true}));",
+                    el, idx
+                )
 
-        try:
-            select_hora = browser.find_element(By.ID, 'Agendar_llamada')
-            Select(select_hora).select_by_index(1)
-        except:
-            return False, "No se pudo seleccionar la hora"
-
-        try:
             checkbox = browser.find_element(By.ID, 'autorizacion_ofertas_comerciales-c1a9e7d9-fef2-4f6a-8251-2ed4fac8c3df')
             browser.execute_script("arguments[0].click();", checkbox)
-        except:
-            return False, "No se pudo aceptar condiciones"
 
-        try:
             submit = browser.find_element(By.CSS_SELECTOR, '#smartcapture-block-awjlkpfmvw9 .sc-button')
             browser.execute_script("arguments[0].click();", submit)
-        except:
-            return False, "No se pudo enviar"
+        except Exception as e:
+            browser.switch_to.default_content()
+            return False, f"Error en formulario: {e}"
 
+        browser.switch_to.default_content()
         time.sleep(5)
         return True, "OK"
-
 
 class FiNetwork(WebBase):
     def __init__(self):
@@ -1068,7 +1131,8 @@ class FiNetwork(WebBase):
         browser.get(self.url)
         time.sleep(2)
         self.aceptar_cookies(browser, '//*[@id="accept-button"]')
-        if not self.click_seguro(browser, '/html/body/div[2]/div[12]/header/div[1]/div[2]/span/div'):
+        time.sleep(1)
+        if not self.click_seguro(browser, '//*[@id="cmb-blob"]'):
             return False, "No se pudo abrir 'Te llamamos'"
         if not self.escribir_seguro(browser, '//*[@id="input-call-me-back-form-contactPhone"]', telefono):
             return False, "No se pudo introducir el teléfono"

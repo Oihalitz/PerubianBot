@@ -11,3 +11,4 @@ perubianbot.spec
 LEEME.md
 .DS_Store
 webs_hash.json
+__pycache__/

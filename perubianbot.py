@@ -22,14 +22,16 @@ from consolemenu import ConsoleMenu
 from consolemenu.items import FunctionItem
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 from unidecode import unidecode
 
 # Importar módulo de webs
 import webs
 
 # ============= CONFIGURACIÓN =============
-VERSION = '3.0'
+VERSION = '3.1'
 GIST_VERSION_URL = "https://gist.githubusercontent.com/Oihalitz/06b39df2b15439c8aa0c6419e5565341/raw/versionperubian.json"
 UPDATE_WEBS_URL = "https://raw.githubusercontent.com/Oihalitz/PerubianBot/refs/heads/main/webs.py"
 CACHE_DIR = os.path.join(os.path.expanduser("~"), ".perubianbot")
@@ -38,12 +40,12 @@ CACHE_WEBS_HASH_PATH = os.path.join(CACHE_DIR, "webs_hash.json")
 HASH_CACHE_TTL_SECONDS = 12 * 60 * 60
 
 PERUBIAN_BANNER = Fore.MAGENTA + Style.BRIGHT + r"""
-  _____                _     _               ____      ___  
- |  __ \              | |   (_)             |___ \    / _ \ 
- | |__) |__ _ __ _   _| |__  _  __ _ _ __    __) |  | | | |
- |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \  |__ <   | | | |
- | |  |  __/ |  | |_| | |_) | | (_| | | | | ___) | _| |_| |
- |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)\___/  
+  _____                _     _               ____      __
+ |  __ \              | |   (_)             |___ \    /_ |
+ | |__) |__ _ __ _   _| |__  _  __ _ _ __    __) |    | |
+ |  ___/ _ \ '__| | | | '_ \| |/ _` | '_ \  |__ <     | |
+ | |  |  __/ |  | |_| | |_) | | (_| | | | | ___) | _  | |
+ |_|   \___|_|   \__,_|_.__/|_|\__,_|_| |_| |____(_)(_)|_|
 """ + Style.RESET_ALL
 
 # ============= VARIABLES GLOBALES =============
@@ -54,42 +56,62 @@ headless_mode = False
 
 # ============= FUNCIONES NAVEGADOR =============
 
+def ajustar_ventana(browser):
+    """Maximiza la ventana para que se muestren los formularios responsive.
+
+    Algunas webs (grupo Euskaltel: Euskaltel, Racctel+, etc.) ocultan el campo
+    del telefono cuando la ventana es pequena. Maximizar evita ese problema.
+    """
+    try:
+        browser.maximize_window()
+    except Exception:
+        try:
+            browser.set_window_size(1920, 1080)
+        except Exception:
+            pass
+
+
 def configurar_navegador():
     """Configura y retorna el navegador (Firefox o Chrome)"""
     global browser
     
     # Intentar Firefox primero
     if os.name == 'nt':
-        firefox_binary = r'C:\Program Files\Mozilla Firefox\firefox.exe'
+        firefox_candidates = [r'C:\Program Files\Mozilla Firefox\firefox.exe']
         PATH_TO_DEV_NULL = 'nul'
     elif os.uname().sysname == 'Darwin':
-        firefox_binary = '/Applications/Firefox.app/Contents/MacOS/firefox'
+        firefox_candidates = [
+            '/Applications/Firefox.app/Contents/MacOS/firefox',
+            '/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox',
+            '/Applications/Firefox Nightly.app/Contents/MacOS/firefox',
+        ]
         PATH_TO_DEV_NULL = '/dev/null'
     else:
-        firefox_binary = '/usr/bin/firefox'
+        firefox_candidates = ['/usr/bin/firefox', '/usr/bin/firefox-esr']
         PATH_TO_DEV_NULL = '/dev/null'
-    
-    if os.path.exists(firefox_binary):
+
+    firefox_binary = next((p for p in firefox_candidates if os.path.exists(p)), None)
+
+    if firefox_binary:
         try:
-            profile = webdriver.FirefoxProfile()
-            profile.set_preference("media.autoplay.default", 0)
-            profile.accept_untrusted_certs = True
-            profile.set_preference("media.volume_scale", "0.0")
-            profile.set_preference("dom.webnotifications.enabled", False)
-            
-            geckodriver_path = './geckodriver' if not getattr(sys, 'frozen', False) else os.path.join(sys._MEIPASS, 'geckodriver')
-            
             options = webdriver.FirefoxOptions()
+            options.binary_location = firefox_binary
+            options.set_preference("media.autoplay.default", 0)
+            options.set_preference("media.volume_scale", "0.0")
+            options.set_preference("dom.webnotifications.enabled", False)
             if headless_mode:
-                options.headless = True
-            
+                options.add_argument("--headless")
+
+            firefox_service = FirefoxService(
+                GeckoDriverManager().install(),
+                log_path=PATH_TO_DEV_NULL
+            )
+
             browser = webdriver.Firefox(
-                firefox_binary=firefox_binary,
-                executable_path=geckodriver_path,
-                firefox_profile=profile,
-                service_log_path=PATH_TO_DEV_NULL,
+                service=firefox_service,
                 options=options
             )
+            ajustar_ventana(browser)
             return browser
         except Exception as e:
             print(f"Error con Firefox: {e}")
@@ -101,10 +123,13 @@ def configurar_navegador():
     chrome_options.add_argument('--log-level=3')
     chrome_options.add_argument('--disable-logging')
     chrome_options.add_argument('--silent')
+    chrome_options.add_argument('--start-maximized')
     if headless_mode:
         chrome_options.add_argument('--headless')
-    
+        chrome_options.add_argument('--window-size=1920,1080')
+
     browser = webdriver.Chrome(service=chrome_service, options=chrome_options)
+    ajustar_ventana(browser)
     return browser
 
 

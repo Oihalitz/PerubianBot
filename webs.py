@@ -135,6 +135,102 @@ class WebBase:
             return True
         except:
             return False
+
+    def rellenar_widget_llamada(self, browser, telefono):
+        """Rellena widgets BySide / c2c (Euskaltel, MásMóvil, etc.)"""
+        phone_selectors = [
+            (By.XPATH, "//input[starts-with(@id, 'CMPhoneBySideData_')]"),
+            (By.XPATH, "//input[starts-with(@id, 'BysidePhoneBySideData_')]"),
+            (By.CSS_SELECTOR, "#c2c-form #phone"),
+            (By.CSS_SELECTOR, "#c2c-modal-form #phone"),
+            (By.XPATH, "(//*[@id='phone'])[1]"),
+        ]
+        wrote = self.escribir_lento_visible(browser, phone_selectors, telefono, delay=0.15)
+        if not wrote:
+            try:
+                wrote = bool(browser.execute_script(
+                    """
+                    const sels = [
+                      "input[id^='CMPhoneBySideData_']",
+                      "input[id^='BysidePhoneBySideData_']",
+                      "#c2c-form #phone",
+                      "#c2c-modal-form #phone",
+                      "#phone"
+                    ];
+                    for (const s of sels) {
+                      const el = document.querySelector(s);
+                      if (!el) continue;
+                      el.focus();
+                      el.value = arguments[0];
+                      el.dispatchEvent(new Event('input', {bubbles:true}));
+                      el.dispatchEvent(new Event('change', {bubbles:true}));
+                      return true;
+                    }
+                    return false;
+                    """,
+                    telefono
+                ))
+                time.sleep(0.5)
+            except:
+                wrote = False
+        if not wrote:
+            return False, "No se pudo introducir el teléfono"
+
+        try:
+            schedule = self.encontrar_elemento_visible(
+                browser,
+                [(By.XPATH, "//select[starts-with(@id, 'CMScheduleBySideData_')]")]
+            )
+            if schedule:
+                opts = [o for o in Select(schedule).options if o.get_attribute('value')]
+                if opts:
+                    Select(schedule).select_by_value(opts[0].get_attribute('value'))
+        except:
+            pass
+
+        submit_selectors = [
+            (By.XPATH, "//input[starts-with(@id, 'CMCallBtnBySideData_')]"),
+            (By.XPATH, "//input[starts-with(@id, 'BysideCallBtnBySideData_')]"),
+            (By.XPATH, "//input[starts-with(@id, 'submit_btBySideData_')]"),
+            (By.CSS_SELECTOR, "#c2c-form #c2c-submit"),
+            (By.XPATH, "(//*[@id='c2c-submit'])[1]"),
+        ]
+        btn = self.encontrar_elemento_visible(browser, submit_selectors)
+        if btn:
+            try:
+                browser.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'}); arguments[0].click();",
+                    btn
+                )
+                time.sleep(2)
+                return True, "OK"
+            except:
+                pass
+        try:
+            clicked = bool(browser.execute_script(
+                """
+                const sels = [
+                  "input[id^='CMCallBtnBySideData_']",
+                  "input[id^='BysideCallBtnBySideData_']",
+                  "input[id^='submit_btBySideData_']",
+                  "#c2c-form #c2c-submit",
+                  "#c2c-submit"
+                ];
+                for (const s of sels) {
+                  const el = document.querySelector(s);
+                  if (!el) continue;
+                  el.click();
+                  return true;
+                }
+                return false;
+                """
+            ))
+        except:
+            clicked = False
+        if not clicked:
+            return False, "No se pudo enviar"
+        time.sleep(2)
+        return True, "OK"
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         """Método que debe implementar cada web"""
@@ -175,27 +271,26 @@ class Euroinnova(WebBase):
         browser.get(self.url)
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="accept-cookies"]')
-        
-        if not self.click_seguro(browser, '/html/body/div[2]/div/div[2]/div[2]/button'):
+
+        if not self.click_seguro(browser, '//button[contains(@class,"btn-solicitar_informacion")]'):
+            try:
+                browser.execute_script("if (typeof abrirSolinfo === 'function') abrirSolinfo();")
+                time.sleep(1)
+            except:
+                pass
+
+        time.sleep(1)
+        if not self.escribir_seguro(browser, '//*[@id="name"]', nombre):
             return False, "No se pudo abrir formulario"
-        
-        time.sleep(2)
-        self.escribir_seguro(browser, '//*[@id="name"]', nombre)
         self.escribir_seguro(browser, '//*[@id="lastname"]', apellido)
         self.escribir_seguro(browser, '//*[@id="mail"]', email)
         self.escribir_seguro(browser, '//*[@id="tel"]', telefono)
-        try:
-            select_elem = browser.find_element(By.XPATH, '/html/body/div[6]/div/div/div[3]/form/div[4]/div[2]/div/select')
-            Select(select_elem).select_by_index(9)
-        except:
-            return False, "No se pudo seleccionar el desplegable"
-        time.sleep(1)
         self.click_seguro(browser, '//*[@id="privacidad"]')
         time.sleep(1)
-        
+
         if not self.click_seguro(browser, '//*[@id="btn_enviar"]'):
             return False, "No se pudo enviar"
-        
+
         time.sleep(3)
         return True, "OK"
 
@@ -212,18 +307,18 @@ class Genesis(WebBase):
         time.sleep(1)
 
         try:
-            select_elem = browser.find_element(By.XPATH, '/html/body/div[1]/div/main/div/div/div/article/div/div/div/div/div/form/section/div/div[2]/div/select')
+            select_elem = browser.find_element(By.ID, 'edit-el-principal-motivo-de-la-llamada')
             Select(select_elem).select_by_index(1)
         except:
             return False, "No se pudo seleccionar el desplegable"
         self.escribir_seguro(browser, '//*[@id="edit-por-quien-preguntamos-"]', nombre)
         self.escribir_seguro(browser, '//*[@id="edit-phone"]', telefono)
         self.escribir_seguro(browser, '//*[@id="edit-phone-confirmation"]', telefono)
-        self.click_seguro(browser, '/html/body/div[1]/div/main/div/div/div/article/div/div/div/div/div/form/section/div/div[7]/div/label')
-        
+        self.click_seguro(browser, '//*[@id="edit-legal-note-checkbox"]')
+
         if not self.click_seguro(browser, '//*[@id="edit-actions-submit"]'):
             return False, "No se pudo enviar"
-        
+
         time.sleep(3)
         return True, "OK"
 
@@ -337,31 +432,7 @@ class Euskaltel(WebBase):
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
         time.sleep(2)
-        
-        selectors = [
-            (By.CSS_SELECTOR, '#c2c-form #phone'),
-            (By.XPATH, '//*[@id="c2c-form"]//*[@id="phone"]'),
-            (By.XPATH, '(//*[@id="phone"])[1]')
-        ]
-        if not self.escribir_lento_visible(browser, selectors, telefono, delay=0.2):
-            return False, "No se pudo introducir el teléfono"
-
-        submit_selectors = [
-            (By.CSS_SELECTOR, '#c2c-form #c2c-submit'),
-            (By.XPATH, '//*[@id="c2c-form"]//*[@id="c2c-submit"]'),
-            (By.XPATH, '(//*[@id="c2c-submit"])[1]')
-        ]
-        submit_button = self.encontrar_elemento_visible(browser, submit_selectors)
-        if not submit_button:
-            return False, "No se pudo encontrar el boton de envio"
-        try:
-            browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
-            browser.execute_script("arguments[0].click();", submit_button)
-        except:
-            return False, "No se pudo enviar"
-        
-        time.sleep(3)
-        return True, "OK"
+        return self.rellenar_widget_llamada(browser, telefono)
 
 
 class Pelayo(WebBase):
@@ -411,16 +482,41 @@ class Orange(WebBase):
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(2)
+        self.click_seguro(browser, "//button[normalize-space()='Aceptar']")
         self.aceptar_cookies(browser, '/html/body/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/button[3]')
         time.sleep(1)
-        
-        self.click_seguro(browser, '/html/body/div[1]/div/div/div[1]/div/main/div[2]/div/article/div[4]/div[3]/a')
-        time.sleep(3)
-        self.escribir_seguro(browser, '//*[@id="callback-modal__phone"]', telefono)
-        
-        if not self.click_seguro(browser, '//*[@id="callback-modal__submit"]'):
+
+        try:
+            browser.execute_script(
+                "window.dispatchEvent(new CustomEvent('open-callback-modal', "
+                "{ detail: { leadSource: 'es-ti-cs-ora0sl1cn2orangetelefono' } }));"
+            )
+        except:
+            pass
+        self.click_seguro(browser, "//button[contains(., 'Llamadme gratis')]")
+        time.sleep(2)
+
+        try:
+            prefix = browser.find_element(By.CSS_SELECTOR, 'select[x-model="prefix"]')
+            Select(prefix).select_by_value('es')
+        except:
+            pass
+
+        if not self.escribir_lento_visible(browser, [(By.ID, 'cb-phone')], telefono, delay=0.12):
+            if not self.escribir_js(browser, '//*[@id="cb-phone"]', telefono):
+                return False, "No se pudo introducir el teléfono"
+
+        submit = self.encontrar_elemento_visible(browser, [
+            (By.XPATH, "//button[@type='submit' and contains(., 'Que me llamen')]"),
+            (By.XPATH, "//form//button[@type='submit']"),
+        ])
+        if not submit:
             return False, "No se pudo enviar"
-        
+        try:
+            browser.execute_script("arguments[0].click();", submit)
+        except:
+            return False, "No se pudo enviar"
+
         time.sleep(3)
         return True, "OK"
 
@@ -624,22 +720,10 @@ class MasMovilAlarmas(WebBase):
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
 
-        # Botón "LLÁMAME GRATIS" — buscamos por texto para no depender del XPath absoluto
-        if not self.click_seguro(browser, '//button[.//img[@src="/icons/phone-filled-black.svg"]][1]', timeout=2):
-            if not self.click_seguro(browser, '//button[contains(., "LLÁMAME")][1]', timeout=2):
-                return False, "No se pudo abrir el widget de llamada"
-        time.sleep(3)
-
-        if not self.escribir_seguro(browser, "//*[starts-with(@id, 'BysidePhoneBySideData_')]", telefono):
-            return False, "No se pudo introducir el teléfono"
-        if not self.click_seguro(browser, "//*[starts-with(@id, 'BysideCallBtnBySideData_')]"):
-            return False, "No se pudo enviar"
-
-        # Confirmación opcional que puede aparecer
-        self.click_seguro(browser, "//*[starts-with(@id, 'BysideCallBtnBySideData_')]", timeout=2)
-
+        self.click_seguro(browser, '//button[.//img[contains(@src, "phone-filled")]][1]', timeout=1)
+        self.click_seguro(browser, '//button[contains(., "LLÁMAME")][1]', timeout=1)
         time.sleep(2)
-        return True, "OK"
+        return self.rellenar_widget_llamada(browser, telefono)
 
 
 
@@ -720,31 +804,7 @@ class Telecable(WebBase):
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
         time.sleep(2)
-        
-        selectors = [
-            (By.CSS_SELECTOR, '#c2c-form #phone'),
-            (By.XPATH, '//*[@id="c2c-form"]//*[@id="phone"]'),
-            (By.XPATH, '(//*[@id="phone"])[1]')
-        ]
-        if not self.escribir_lento_visible(browser, selectors, telefono, delay=0.2):
-            return False, "No se pudo introducir el teléfono"
-
-        submit_selectors = [
-            (By.CSS_SELECTOR, '#c2c-form #c2c-submit'),
-            (By.XPATH, '//*[@id="c2c-form"]//*[@id="c2c-submit"]'),
-            (By.XPATH, '(//*[@id="c2c-submit"])[1]')
-        ]
-        submit_button = self.encontrar_elemento_visible(browser, submit_selectors)
-        if not submit_button:
-            return False, "No se pudo encontrar el boton de envio"
-        try:
-            browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
-            browser.execute_script("arguments[0].click();", submit_button)
-        except:
-            return False, "No se pudo enviar"
-        
-        time.sleep(3)
-        return True, "OK"
+        return self.rellenar_widget_llamada(browser, telefono)
 
 
 class HomeGO(WebBase):
@@ -817,7 +877,8 @@ class ISalud(WebBase):
 class Recordador(WebBase):
     """Web especial que usa HTTP POST con headers"""
     def __init__(self):
-        super().__init__("Recordador", "https://www.prosegur.es")
+        # Endpoint /api-servicio/prospector_lead/recordador-alarmas responde 404.
+        super().__init__("Recordador", "https://www.prosegur.es", habilitada=False)
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         try:
@@ -842,7 +903,8 @@ class Recordador(WebBase):
 
 class ProyectosYSeguros(WebBase):
     def __init__(self):
-        super().__init__("Proyectos y Seguros", "https://www.proyectosyseguros.com/te-llamamos/")
+        # WAF/Cloudflare devuelve 403 a automatización.
+        super().__init__("Proyectos y Seguros", "https://www.proyectosyseguros.com/te-llamamos/", habilitada=False)
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
@@ -872,7 +934,8 @@ class ProyectosYSeguros(WebBase):
 
 class MoneyGO(WebBase):
     def __init__(self):
-        super().__init__("MoneyGO", "https://ctc.moneygo.es/money-go-ctc-web/ctc/04f25d44-f1ce-4554-ba40-57211f7133ce")
+        # moneygo.es cerró en enero 2026; el CTC tiene certificado inválido.
+        super().__init__("MoneyGO", "https://ctc.moneygo.es/money-go-ctc-web/ctc/04f25d44-f1ce-4554-ba40-57211f7133ce", habilitada=False)
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
@@ -918,20 +981,7 @@ class MundoR(WebBase):
         time.sleep(3)
         self.aceptar_cookies(browser, '//*[@id="onetrust-accept-btn-handler"]')
         time.sleep(2)
-        
-        selectors = [
-            (By.CSS_SELECTOR, '#c2c-form #phone'),
-            (By.XPATH, '//*[@id="c2c-form"]//*[@id="phone"]'),
-            (By.XPATH, '(//*[@id="phone"])[1]')
-        ]
-        if not self.escribir_lento_visible(browser, selectors, telefono, delay=0.2):
-            return False, "No se pudo introducir el teléfono"
-        
-        if not self.click_seguro(browser, '//*[@id="c2c-submit"]'):
-            return False, "No se pudo enviar"
-        
-        time.sleep(3)
-        return True, "OK"
+        return self.rellenar_widget_llamada(browser, telefono)
 
 
 class HomeServe(WebBase):
@@ -1037,23 +1087,64 @@ class Alarmak(WebBase):
 
 class CentroDermatologico(WebBase):
     def __init__(self):
-        super().__init__("Centro Dermatologico Estetico", "https://www.centrodermatologicoestetico.com/te-llamamos/")
+        super().__init__("Centro Dermatologico Estetico", "https://centrodermatologicoestetico.com/te-llamamos/")
     
     def ejecutar(self, browser, nombre, apellido, telefono, email):
         browser.get(self.url)
         time.sleep(3)
+        self.click_seguro(browser, '//button[contains(@class,"cky-btn-accept")]')
+        self.click_seguro(browser, '//button[@data-cky-tag="accept-button"]')
         self.aceptar_cookies(browser, '//*[@id="cookie_action_close_header"]')
-        
-        self.escribir_seguro(browser, '/html/body/main/div/div[1]/section/div[2]/div[1]/div/div[4]/div/form/input[5]', nombre)
-        self.escribir_seguro(browser, '//*[@id="international_PhoneNumber_countrycode"]', telefono)
-        self.escribir_seguro(browser, '/html/body/main/div/div[1]/section/div[2]/div[1]/div/div[4]/div/form/input[7]', email)
-        self.click_seguro(browser, '/html/body/main/div/div[1]/section/div[2]/div[1]/div/div[4]/div/form/div/div/div/input')
-        
-        if not self.click_seguro(browser, '/html/body/main/div/div[1]/section/div[2]/div[1]/div/div[4]/div/form/button'):
-            return False, "No se pudo enviar"
-        
-        time.sleep(2)
-        return True, "OK"
+        time.sleep(1)
+
+        switched = False
+        try:
+            iframe = browser.find_element(By.CSS_SELECTOR, 'iframe[src*="forms.zohopublic"]')
+            browser.switch_to.frame(iframe)
+            switched = True
+        except:
+            pass
+
+        try:
+            phone_ready = False
+            for _ in range(12):
+                try:
+                    browser.find_element(By.ID, 'PhoneNumber')
+                    phone_ready = True
+                    break
+                except:
+                    try:
+                        browser.find_element(By.ID, 'international_PhoneNumber_countrycode')
+                        phone_ready = True
+                        break
+                    except:
+                        time.sleep(0.5)
+            if not phone_ready:
+                return False, "No se pudo introducir el teléfono"
+
+            self.escribir_seguro(browser, '//input[@name="SingleLine"]', f"{nombre} {apellido}")
+            if not (
+                self.escribir_seguro(browser, '//*[@id="PhoneNumber"]', telefono)
+                or self.escribir_seguro(browser, '//*[@id="international_PhoneNumber_countrycode"]', telefono)
+            ):
+                return False, "No se pudo introducir el teléfono"
+            self.escribir_seguro(browser, '//input[@name="Email"]', email)
+            self.click_seguro(browser, '//*[@id="TermsConditions-input"]')
+            self.click_seguro(browser, '//input[@name="TermsConditions"]')
+            if not (
+                self.click_seguro(browser, '//button[@elname="submit"]')
+                or self.click_seguro(browser, '//button[contains(@class,"zfbtnSubmit")]')
+                or self.click_seguro(browser, '//button[@type="submit"]')
+            ):
+                return False, "No se pudo enviar"
+            time.sleep(2)
+            return True, "OK"
+        finally:
+            if switched:
+                try:
+                    browser.switch_to.default_content()
+                except:
+                    pass
 
 
 class MutuaMadrilena(WebBase):

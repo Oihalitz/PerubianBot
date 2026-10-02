@@ -25,12 +25,13 @@ El PerubianBot es un programa que te permite introducir un número de teléfono 
 - console_menu
 
 ### Instalación de las dependencias:
+Con <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a>, que instala también el Python necesario:
 ```
-pip install -r requirements.txt
+uv sync
 ```
 ### Ejecución:
 ```
-python perubianbot.py
+uv run perubianbot.py
 ```
 
 ## Disclaimer:

@@ -1,0 +1,18 @@
+[project]
+name = "perubianbot"
+version = "3.1"
+description = "Introduce un número de teléfono en formularios de \"te llamamos gratis\" para recibir información comercial"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = [
+    "colorama",
+    "console_menu",
+    "requests",
+    "selenium",
+    "webdriver_manager",
+    "Unidecode",
+]
+
+[tool.uv]
+package = false
